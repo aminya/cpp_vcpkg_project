@@ -2,8 +2,7 @@
 
 #include <fmt/core.h>
 
-int some_fun()
-{
+int some_fun() {
   fmt::print("Hello {} !", "world");
   return 0;
 }
