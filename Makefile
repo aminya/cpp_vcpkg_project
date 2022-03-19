@@ -1,6 +1,6 @@
 # Notes:
 # - list all the task under PHONY
-# - If getting missing separator error, try replacing tabs with spaces.
+# - If getting missing separator error, try replacing spaces with tabs.
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or remove the Ninja generator from the commands.
 .PHONY: build test test_release docs format clean
 
@@ -28,7 +28,7 @@ format:
 ifeq ($(OS), Windows_NT)
 	pwsh -c '$$files=(git ls-files --exclude-standard); foreach ($$file in $$files) { if ((get-item $$file).Extension -in ".cpp", ".hpp", ".c", ".cc", ".cxx", ".hxx", ".ixx") { clang-format -i -style=file $$file } }'
 else
-    git ls-files --exclude-standard | grep -E '\.(cpp|hpp|c|cc|cxx|hxx|ixx)$$' | xargs clang-format -i -style=file
+	git ls-files --exclude-standard | grep -E '\.(cpp|hpp|c|cc|cxx|hxx|ixx)$$' | xargs clang-format -i -style=file
 endif
 
 clean:
