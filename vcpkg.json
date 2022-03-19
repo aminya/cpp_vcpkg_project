@@ -1,0 +1,31 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+    "name": "myproject",
+    "version-string": "0.1.0",
+    "builtin-baseline": "a3df696929b28195b0d7a477ba6cd16dba48fa52",
+    "dependencies": [
+        {
+            "name": "eigen3",
+            "version>=": "3.4.0"
+        },
+        {
+            "name": "fmt",
+            "version>=": "8.1.1"
+        },
+        {
+            "name": "tl-expected",
+            "version>=": "1.0.0#2"
+        }
+    ],
+    "features": {
+        "tests": {
+            "description": "Build the tests of the package's tests",
+            "dependencies": [
+                {
+                    "name": "catch2",
+                    "version>=": "2.13.7"
+                }
+            ]
+        }
+    }
+}
