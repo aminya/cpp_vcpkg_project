@@ -7,10 +7,6 @@
         {
             "name": "fmt",
             "version>=": "8.1.1"
-        },
-        {
-            "name": "tl-expected",
-            "version>=": "1.0.0#2"
         }
     ],
     "features": {

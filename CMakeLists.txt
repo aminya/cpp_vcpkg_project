@@ -80,6 +80,7 @@ project_options(
 
 # Adding the src:
 add_subdirectory(src/exe)
+add_subdirectory(src/header_lib)
 
 if(FEATURE_TESTS)
   add_subdirectory("./test")
