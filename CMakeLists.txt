@@ -78,10 +78,9 @@ project_options(
   # ENABLE_UNITY
 )
 
-# Adding the src:
-add_subdirectory(src/my_exe)
-add_subdirectory(src/my_lib)
-add_subdirectory(src/my_header_lib)
+add_subdirectory(./my_exe)
+add_subdirectory(./my_lib)
+add_subdirectory(./my_header_lib)
 
 if(FEATURE_TESTS)
   add_subdirectory("./test")
