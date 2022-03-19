@@ -1,6 +1,7 @@
 #include <fmt/core.h>
 
-int main() {
-    fmt::print("Hello {} !", "world");
-    return 0;
+int main()
+{
+  fmt::print("Hello {} !", "world");
+  return 0;
 }
