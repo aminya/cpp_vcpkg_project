@@ -79,7 +79,7 @@ project_options(
 )
 
 # Adding the src:
-add_subdirectory(src)
+add_subdirectory(src/exe)
 
 if(FEATURE_TESTS)
   add_subdirectory("./test")

@@ -5,10 +5,6 @@
     "builtin-baseline": "a3df696929b28195b0d7a477ba6cd16dba48fa52",
     "dependencies": [
         {
-            "name": "eigen3",
-            "version>=": "3.4.0"
-        },
-        {
             "name": "fmt",
             "version>=": "8.1.1"
         },
