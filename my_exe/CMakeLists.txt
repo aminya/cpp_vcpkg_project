@@ -10,6 +10,3 @@ endforeach()
 
 # Link dependencies
 target_link_system_libraries(my_exe PRIVATE fmt::fmt)
-
-# Package the project
-package_project(TARGETS my_exe)

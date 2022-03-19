@@ -82,6 +82,21 @@ add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)
 add_subdirectory(./my_header_lib)
 
+# Package the project
+package_project(
+  TARGETS
+  my_exe
+  my_lib
+  my_header_lib
+  project_options
+  project_warnings
+  INTERFACE_DEPENDENCIES_CONFIGURED
+  ${my_header_lib_DEPENDENCIES_CONFIGURED}
+  INTERFACE_INCLUDES
+  ${my_header_lib_INCLUDE_DIR}
+  PUBLIC_INCLUDES
+  ${my_lib_INCLUDE_DIR})
+
 if(FEATURE_TESTS)
   add_subdirectory("./test")
 endif()
