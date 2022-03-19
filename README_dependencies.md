@@ -22,8 +22,8 @@ Please check [the setup-cpp documentation](https://github.com/aminya/setup-cpp) 
 For example, on Windows, you can run the following to install llvm, cmake, ninja, ccache, conan, and cppcheck.
 ```ps1
 # windows example (open shell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.5.7/setup_cpp_windows.exe"
-./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan true --cppcheck true
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp_windows.exe"
+./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --cppcheck true
 
 RefreshEnv.cmd # reload the environment
 ```
@@ -102,26 +102,7 @@ The following compilers should work:
 
 	</details>
 
-
-2. [Conan](https://conan.io/)
-	<details>
-	<summary>Install Command</summary>
-
-	- Via pip - https://docs.conan.io/en/latest/installation.html#install-with-pip-recommended
-
-			pip install --user conan
-
-	- Windows:
-
-			choco install conan -y
-
-	- MacOS:
-
-			brew install conan
-
-	</details>
-
-3. [CMake 3.15+](https://cmake.org/)
+2. [CMake 3.15+](https://cmake.org/)
 	<details>
 	<summary>Install Command</summary>
 
