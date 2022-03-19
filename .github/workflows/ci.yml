@@ -4,7 +4,6 @@ on:
   release:
     types: [published]
   push:
-    tags:
     branches:
       - main
       - develop
