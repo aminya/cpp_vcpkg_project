@@ -12,13 +12,13 @@ test:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=ON
 	cmake --build ./build --config Debug
 
-	cd build/test && ctest -C Debug --output-on-failure
+	(cd build/my_exe/test && ctest -C Debug --output-on-failure)
 
 test_release:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DFEATURE_TESTS:BOOL=ON
 	cmake --build ./build --config RelWithDebInfo
 
-	cd build/test && ctest -C RelWithDebInfo --output-on-failure
+	(cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
 
 docs:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF

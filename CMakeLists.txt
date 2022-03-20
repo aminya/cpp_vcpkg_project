@@ -26,17 +26,14 @@ project(
   HOMEPAGE_URL "https://github.com/cpp-best-practices/cpp_vcpkg_project"
   LANGUAGES CXX C)
 
-# enable sanitizers, clang-tidy, and coverage if running the tests
+# enable sanitizers and clang-tidy if running the tests
 set(ENABLE_CLANG_TIDY OFF)
 set(ENABLE_CPPCHECK OFF)
 set(ENABLE_SANITIZER_ADDRESS OFF)
 set(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR OFF)
-set(ENABLE_COVERAGE OFF)
 if(FEATURE_TESTS)
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
   set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
-
-  set(ENABLE_COVERAGE "ENABLE_COVERAGE")
 
   if(# not windows
      NOT
@@ -99,10 +96,6 @@ package_project(
   ${my_header_lib_INCLUDE_DIR}
   PUBLIC_INCLUDES
   ${my_lib_INCLUDE_DIR})
-
-if(FEATURE_TESTS)
-  add_subdirectory("./test")
-endif()
 
 if(FEATURE_FUZZ_TESTS)
   add_subdirectory(fuzz_test)

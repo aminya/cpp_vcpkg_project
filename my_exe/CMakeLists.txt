@@ -10,3 +10,7 @@ endforeach()
 
 # Link dependencies
 target_link_system_libraries(my_exe PRIVATE fmt::fmt)
+
+if(FEATURE_TESTS)
+  add_subdirectory("./test")
+endif()
