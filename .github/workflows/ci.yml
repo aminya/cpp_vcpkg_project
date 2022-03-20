@@ -114,7 +114,7 @@ jobs:
         # has meaningful results
       - name: Configure CMake
         run: |
-          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}}
+          cmake -S ./ -B ./build -G "${{matrix.generator}}" -DCMAKE_BUILD_TYPE:STRING=${{matrix.build_type}} -DFEATURE_TESTS=true
 
       - name: Build
         # Execute the build.  You can specify a specific target with "--target <NAME>"
