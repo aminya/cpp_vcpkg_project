@@ -1,4 +1,4 @@
-add_executable(my_exe main.cpp)
+add_executable(my_exe "./src/main.cpp")
 target_link_libraries(my_exe PRIVATE project_options project_warnings) # link project_options/warnings
 
 # Find dependencies:
