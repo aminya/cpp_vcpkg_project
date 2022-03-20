@@ -22,13 +22,11 @@ stages:
 .setup_cpp: &setup_cpp |
   curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp_linux"
   chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
+  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --make true
   source ~/.cpprc
 
 .test: &test |
-  # Build and Test
-  cmake -S ./ -B ./build -DCMAKE_BUILD_TYPE:STRING=Debug
-  cmake --build ./build --config Debug
+  make test
 
 test_linux_llvm:
   stage: test

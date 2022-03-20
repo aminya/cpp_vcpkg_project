@@ -128,6 +128,8 @@ jobs:
         run: |
           (cd build/my_exe/test && ctest -C ${{matrix.build_type}} --output-on-failure)
           (cd build/my_header_lib/test && ctest -C ${{matrix.build_type}} --output-on-failure)
+          (cd build/my_lib/test && ctest -C ${{matrix.build_type}} --output-on-failure)
+
           gcovr -j ${{env.nproc}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable '${{ matrix.gcov_executable }}'
 
       - name: Windows - Test and coverage
@@ -135,6 +137,7 @@ jobs:
         run: |
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- (cd build/my_exe/test && ctest -C ${{matrix.build_type}} --output-on-failure)
           OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- (cd build/my_header_lib/test && ctest -C ${{matrix.build_type}} --output-on-failure)
+          OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- (cd build/my_lib/test && ctest -C ${{matrix.build_type}} --output-on-failure)
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
