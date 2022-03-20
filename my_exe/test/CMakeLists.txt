@@ -8,20 +8,29 @@ endforeach()
 include(CTest)
 include(Catch)
 
-# test executable
+# calling my_exe executable directly
+add_test(
+  NAME my_exe_test
+  COMMAND my_exe ""
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(my_exe_tests "./tests.cpp")
+# testing helpers
+add_executable(my_exe_helpers_tests "./tests.cpp")
 
-target_link_libraries(my_exe_tests PRIVATE project_warnings project_options Catch2::Catch2)
-target_compile_definitions(my_exe_tests PRIVATE CATCH_CONFIG_MAIN) # generate a main function for the test executable
+# because my_exe helpers and dependencies are private, we should link them here again
+target_include_directories(my_exe_helpers_tests PRIVATE "${my_exe_INCLUDE_DIR}")
+
+target_link_libraries(
+  my_exe_helpers_tests
+  PRIVATE project_warnings
+          project_options
+          Catch2::Catch2
+          ${my_exe_LINKED_LIBRARIES})
+
+# generate a main function for the test executable
+target_compile_definitions(my_exe_helpers_tests PRIVATE CATCH_CONFIG_MAIN)
 
 # use xml reporter if coverage is enabled
 if(${ENABLE_COVERAGE})
   set(COVERAGE_ARGS REPORTER xml)
 endif()
-
-# automatically discover tests that are defined in catch based test files you can modify the tests
-catch_discover_tests(my_exe_tests ${COVERAGE_ARGS})
-
-# constexpr tests
-add_subdirectory(constexpr)
