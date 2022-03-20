@@ -12,6 +12,9 @@ FetchContent_Declare(_project_options
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
+# Define the features of the project
+include("./Features.cmake")
+
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg()
 
