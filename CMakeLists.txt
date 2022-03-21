@@ -35,6 +35,7 @@ if(FEATURE_TESTS)
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
   set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
 
+  string(FIND "$ENV{PATH}" "$ENV{VSINSTALLDIR}" index_of_vs_install_dir)
   if(# not windows
      NOT
      "${CMAKE_SYSTEM_NAME}"
