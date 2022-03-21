@@ -12,7 +12,6 @@ A production-ready C++ project made with vcpkg
 
 ## More Details
 
- * [Dependency Setup](README_dependencies.md)
- * [Building Details](README_building.md)
- * [Troubleshooting](README_troubleshooting.md)
- * [Docker](README_docker.md)
+ * [Dependency Setup](./docs/dependencies.md)
+ * [Building Details](./docs/building.md)
+ * [Docker](./docs/docker.md)
