@@ -81,7 +81,7 @@ add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)
 add_subdirectory(./my_header_lib)
 
-# the variables set using PARENT_SCOPE are passed to package_project
+# the variables set using CACHE STRING "" are passed to package_project
 
 # Package the project
 package_project(
