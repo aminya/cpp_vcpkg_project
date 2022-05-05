@@ -98,6 +98,7 @@ jobs:
           vcpkg: true
           ccache: true
           clangtidy: true
+          make: true
 
           cppcheck: true
 
@@ -132,6 +133,9 @@ jobs:
 
           gcovr -j ${{env.nproc}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable '${{ matrix.gcov_executable }}'
 
+          # test installation
+          make test_install
+
       - name: Windows - Test and coverage
         if: runner.os == 'Windows'
         run: |
@@ -140,6 +144,8 @@ jobs:
             cd ./build/my_header_lib/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../
             cd ./build/my_lib/test; ctest -C ${{matrix.build_type}} --output-on-failure; cd ../../../      
           '
+          # test installation
+          make test_install
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
