@@ -77,6 +77,9 @@ project_options(
   # ENABLE_UNITY
 )
 
+# to get CMAKE_INSTALL_INCLUDEDIR
+include(GNUInstallDirs)
+
 add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)
 add_subdirectory(./my_header_lib)
