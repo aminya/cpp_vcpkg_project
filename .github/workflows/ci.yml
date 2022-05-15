@@ -106,15 +106,25 @@ jobs:
         with:
           languages: "cpp"
 
-      - name: Build, Test, Coverage, Install
+      - name: Test/Coverage
         run: |
           task coverage
-          task coverage_release
-          task install
         env:
           CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
-          CPACK_GENERATOR: ${{matrix.CPACK_GENERATOR}}
           GCOV_EXECUTABLE: ${{matrix.GCOV_EXECUTABLE}}
+
+      - name: Test release
+        run: |
+          task test_release
+        env:
+          CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
+          GCOV_EXECUTABLE: ${{matrix.GCOV_EXECUTABLE}}
+
+      - name: Install
+        run: |
+          task install
+        env:
+          CPACK_GENERATOR: ${{matrix.CPACK_GENERATOR}}
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
