@@ -1,4 +1,5 @@
 # Notes:
+# - Also look at Taskfile.yml, which is a modern replacement for Makefile
 # - list all the task under PHONY
 # - If getting missing separator error, try replacing spaces with tabs.
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or remove the Ninja generator from the commands.
@@ -23,13 +24,21 @@ test:
 	(cd build/my_header_lib/test && ctest -C Debug --output-on-failure)
 	(cd build/my_lib/test && ctest -C Debug --output-on-failure)
 
-test_release:
+test_release_debug:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DFEATURE_TESTS:BOOL=ON
 	cmake --build ./build --config RelWithDebInfo
 
 	(cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
 	(cd build/my_header_lib/test && ctest -C RelWithDebInfo --output-on-failure)
 	(cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+
+test_release:
+	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Release -DFEATURE_TESTS:BOOL=ON
+	cmake --build ./build --config Release
+
+	(cd build/my_exe/test && ctest -C Release --output-on-failure)
+	(cd build/my_header_lib/test && ctest -C Release --output-on-failure)
+	(cd build/my_lib/test && ctest -C Release --output-on-failure)
 
 test_install:
 	cmake --install ./build --prefix ./build/test_install

@@ -38,10 +38,16 @@ tasks:
         CMAKE_BUILD_TYPE: Debug
         FEATURE_TESTS: ON
 
-  test_release:
+  test_release_debug:
     - task: test_template
       vars:
         CMAKE_BUILD_TYPE: RelWithDebInfo
+        FEATURE_TESTS: ON
+
+  test_release:
+    - task: test_template
+      vars:
+        CMAKE_BUILD_TYPE: Release
         FEATURE_TESTS: ON
 
   test_install:
