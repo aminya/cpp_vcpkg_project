@@ -5,38 +5,54 @@
 version: 3
 
 tasks:
+  # the templates called in the other tasks. The variables can be set using the `vars` parameter or by enviroment variables.
+  # Extra flags can be passed by defining `CONFIGURE_FLAGS` and `BUILD_FLAGS`
+  build_template:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING={{.CMAKE_BUILD_TYPE}} -DFEATURE_TESTS:BOOL={{.FEATURE_TESTS}} -DFEATURE_DOCS:BOOL='{{.FEATURE_DOCS | default "OFF"}}' {{.CONFIGURE_FLAGS}}
+    - cmake --build ./build --config {{.CMAKE_BUILD_TYPE}} {{.BUILD_FLAGS}}
+
+  test_template:
+    - task: build_template
+    - (cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+    - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+    - (cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+
+  release:
+    - task: build_template
+      vars:
+        CMAKE_BUILD_TYPE: Release
+        FEATURE_TESTS: OFF
+
+  debug:
+    - task: build_template
+      vars:
+        CMAKE_BUILD_TYPE: Debug
+        FEATURE_TESTS: OFF
+
   build:
     - task: release
 
-  release:
-    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Release -DFEATURE_TESTS:BOOL=OFF
-    - cmake --build ./build --config Release
-
-  debug:
-    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=OFF
-    - cmake --build ./build --config Debug
-
   test:
-    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=ON
-    - cmake --build ./build --config Debug
-    - (cd build/my_exe/test && ctest -C Debug --output-on-failure)
-    - (cd build/my_header_lib/test && ctest -C Debug --output-on-failure)
-    - (cd build/my_lib/test && ctest -C Debug --output-on-failure)
+    - task: test_template
+      vars:
+        CMAKE_BUILD_TYPE: Debug
+        FEATURE_TESTS: ON
 
   test_release:
-    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DFEATURE_TESTS:BOOL=ON
-    - cmake --build ./build --config RelWithDebInfo
-    - (cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
-    - (cd build/my_header_lib/test && ctest -C RelWithDebInfo --output-on-failure)
-    - (cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+    - task: test_template
+      vars:
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+        FEATURE_TESTS: ON
 
   test_install:
     - task: test_release
-    - cmake --install ./build --prefix ./build/test_install
+    - cmake --install ./build --prefix ./install
 
   docs:
-    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
-    - cmake --build ./build --target doxygen-docs --config Debug
+    - task: debug
+      vars:
+        FEATURE_DOCS: ON
+        BUILD_FLAGS: --target doxygen-docs
 
   lint:
     - |
@@ -52,12 +68,12 @@ tasks:
         git ls-files --exclude-standard | grep -E '(CMakeLists\.txt)|(\.(cmake))$' | xargs cmake-format --in-place | xargs cmake-lint --disabled-codes C0103 C0301 R0912 R0915 R0913 --suppress-decorations
       {{end}}
 
-    - ~/vcpkg/vcpkg format-manifest ./test/vcpkg.json ./test_install/vcpkg.json
+    - ~/vcpkg/vcpkg format-manifest ./vcpkg.json
     - npx -y cspell lint --no-progress --show-suggestions
 
   clean: |
     {{if eq OS "windows"}}
-      powershell -c 'function rmrf($path) { if (test-path $path) { rm -r -force $path }}; rmrf ./test/build; rmrf ./test_install/build/; rmrf ./install'
+      powershell -c 'function rmrf($path) { if (test-path $path) { rm -r -force $path }}; rmrf ./build; rmrf; rmrf ./install'
     {{else}}
-      rm -rf ./test/build ./test_install/build/ ./install
+      rm -rf ./build ./install
     {{end}}
