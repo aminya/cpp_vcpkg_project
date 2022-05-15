@@ -124,6 +124,7 @@ jobs:
         run: |
           task install
         env:
+          CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
           CPACK_GENERATOR: ${{matrix.CPACK_GENERATOR}}
 
       - name: Perform CodeQL Analysis
