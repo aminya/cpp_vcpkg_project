@@ -1,4 +1,4 @@
-image: ubuntu:devel
+image: ubuntu:22.04
 
 stages:
   - test
@@ -20,13 +20,15 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
 .setup_cpp: &setup_cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_linux"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.2/setup_cpp_linux"
   chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --make true
+  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcov true
   source ~/.cpprc
 
 .test: &test |
-  make test
+  task coverage
+  task coverage_release
+  task install
 
 test_linux_llvm:
   stage: test
