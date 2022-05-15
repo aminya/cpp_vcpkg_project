@@ -1,0 +1,141 @@
+# Notes
+# - install task from: https://taskfile.dev/#/installation or use `setup-cpp --task true`
+# - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or set CMAKE_GENERATOR to "Visual Studio 17 2022"
+# The templates called in the other tasks. The variables can be set using the `vars` parameter or by enviroment variables. To create variables that are passed to internally called templates, use `env`
+
+version: 3
+
+tasks:
+  # This template accepts the generator, build type and feature flags defined by the vars. Other flags can be passed by `CONFIGURE_FLAGS` and `BUILD_FLAGS`. For example, a specific target can be built by setting BUILD_FLAGS to "--target <NAME>"
+  build_template:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING={{.CMAKE_BUILD_TYPE}} -DFEATURE_TESTS:BOOL={{.FEATURE_TESTS}} -DFEATURE_DOCS:BOOL='{{.FEATURE_DOCS | default "OFF"}}' {{.CONFIGURE_FLAGS}}
+    - cmake --build ./build --config {{.CMAKE_BUILD_TYPE}} {{.BUILD_FLAGS}}
+
+  # Execute the app or the tests
+  run_template:
+    - cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
+    - cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
+    - cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
+
+  # Run with coverage analysis
+  coverage_template:
+    cmds:
+      # Set --sources "your_source_folder\*" and --filter "your_source_folder/" to have a clean coverage report
+      - |
+        {{if eq OS "windows"}}
+
+          OpenCppCoverage.exe --export_type html:./build/coverage --export_type cobertura:./build/coverage.xml --cover_children --sources "my_exe\*" --sources "my_lib\*" --sources "my_header_lib\*" --modules "build\*" -- task run_template
+
+          powershell -c "if (!\$env:CI) { echo '[info] Opening ./build/coverage/index.html...'; start ./build/coverage/index.html }"
+        {{else}}
+          task run_template
+          mkdir -p ./build/coverage/
+
+          gcovr -j {{.nproc | default 1}} --delete --filter "my_exe/" --filter "my_lib/" --filter "my_header_lib/" --root ./ --print-summary --html-details ./build/coverage/index.html --xml-pretty --xml ./build/coverage.xml ./build
+
+          echo "Open ./build/coverage/index.html in a browser for a visual coverage report"
+        {{end}}
+    env:
+      CMAKE_BUILD_TYPE: "{{.CMAKE_BUILD_TYPE}}"
+
+  build:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: OFF
+        CMAKE_BUILD_TYPE: Release
+
+  build_debug:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: OFF
+        CMAKE_BUILD_TYPE: Debug
+
+  install:
+    - task: build
+    - cmake --install ./build --prefix {{.INSTALL_PREFIX | default "./install"}}
+    - cd build && cpack -C Release -G {{.CPACK_GENERATOR | default "ZIP"}}
+
+  test:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: Debug
+    - task: run_template
+      vars:
+        CMAKE_BUILD_TYPE: Debug
+
+  test_release_debug:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+    - task: run_template
+      vars:
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+
+  test_release:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: Release
+    - task: run_template
+      vars:
+        CMAKE_BUILD_TYPE: Release
+
+  coverage:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: Debug
+    - task: coverage_template
+      vars:
+        CMAKE_BUILD_TYPE: Debug
+
+  coverage_release_debug:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+    - task: coverage_template
+      vars:
+        CMAKE_BUILD_TYPE: RelWithDebInfo
+
+  coverage_release:
+    - task: build_template
+      vars:
+        FEATURE_TESTS: ON
+        CMAKE_BUILD_TYPE: Release
+    - task: coverage_template
+      vars:
+        TEST_COMMAND: task run_template
+        CMAKE_BUILD_TYPE: Release
+
+  docs:
+    - task: debug
+      vars:
+        FEATURE_DOCS: ON
+        BUILD_FLAGS: --target doxygen-docs
+
+  lint:
+    - |
+      {{if eq OS "windows"}}
+        powershell -c '$files=(git ls-files --exclude-standard); foreach ($file in $files) { if ((get-item $file).Extension -in ".cpp", ".hpp", ".c", ".cc", ".cxx", ".hxx", ".ixx") { clang-format -i -style=file $file } }'
+      {{else}}
+        git ls-files --exclude-standard | grep -E '\.(cpp|hpp|c|cc|cxx|hxx|ixx)$' | xargs clang-format -i -style=file
+      {{end}}
+    - |
+      {{if eq OS "windows"}}
+      powershell -c '$files=(git ls-files --exclude-standard); foreach ($file in $files) { $item=(get-item $file); if (($item.Name -eq "CMakeLists.txt") -or ($item.Extension -in ".cmake")) { cmake-format --in-place $file; cmake-lint $file --disabled-codes C0103 C0301 R0912 R0915 R0913 --suppress-decorations } }'
+      {{else}}
+        git ls-files --exclude-standard | grep -E '(CMakeLists\.txt)|(\.(cmake))$' | xargs cmake-format --in-place | xargs cmake-lint --disabled-codes C0103 C0301 R0912 R0915 R0913 --suppress-decorations
+      {{end}}
+
+    - ~/vcpkg/vcpkg format-manifest ./vcpkg.json
+    - npx -y cspell lint --no-progress --show-suggestions
+
+  clean: |
+    {{if eq OS "windows"}}
+      powershell -c 'function rmrf($file) { if (test-path $file) { rm -r -force $file }}; rmrf ./build; rmrf ./install'
+    {{else}}
+      rm -rf ./build ./install
+    {{end}}
