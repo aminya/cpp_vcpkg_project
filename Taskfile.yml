@@ -26,9 +26,9 @@ tasks:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
 
-      - (cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
-      - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
-      - (cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+      - cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
+      - cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
+      - cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure
 
   coverage_template: |
     {{if eq OS "windows"}}
@@ -53,6 +53,11 @@ tasks:
   build:
     - task: release
 
+  install:
+    - task: release
+    - cmake --install ./build --prefix {{.INSTALL_PREFIX | default "./install"}}
+    - cd build && cpack -C Release -G {{.CPACK_GENERATOR | default "ZIP"}}
+
   test:
     - task: test_template
       vars:
@@ -71,14 +76,24 @@ tasks:
         CMAKE_BUILD_TYPE: Release
         FEATURE_TESTS: ON
 
-  test_install:
-    - task: test_release
-    - cmake --install ./build --prefix ./install
-
   coverage:
     - task: coverage_template
       vars:
         TEST_COMMAND: task test
+        nproc: "{{.nproc}}"
+        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
+
+  coverage_release_debug:
+    - task: coverage_template
+      vars:
+        TEST_COMMAND: task test_release_debug
+        nproc: "{{.nproc}}"
+        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
+
+  coverage_release:
+    - task: coverage_template
+      vars:
+        TEST_COMMAND: task test_release
         nproc: "{{.nproc}}"
         GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
 

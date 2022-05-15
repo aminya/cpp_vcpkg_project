@@ -35,7 +35,7 @@ jobs:
           # you can specify the version after `-` like "llvm-13.0.0".
           - llvm-13.0.0
           - gcc-11
-        generator:
+        CMAKE_GENERATOR:
           - "Ninja Multi-Config"
 
         exclude:
@@ -47,22 +47,22 @@ jobs:
           # Add appropriate variables for gcov version required. This will intentionally break
           # if you try to use a compiler that does not have gcov set
           - compiler: gcc-11
-            gcov_executable: gcov
-            package_generator: TBZ2
+            GCOV_EXECUTABLE: gcov
+            CPACK_GENERATOR: TBZ2
 
           - compiler: llvm-13.0.0
-            gcov_executable: "llvm-cov gcov"
+            GCOV_EXECUTABLE: "llvm-cov gcov"
 
           # This exists solely to make sure a non-multiconfig build works
           - os: ubuntu-20.04
             compiler: gcc-11
-            generator: "Unix Makefiles"
-            gcov_executable: gcov
+            CMAKE_GENERATOR: "Unix Makefiles"
+            GCOV_EXECUTABLE: gcov
 
           - os: windows-2022
             compiler: msvc
-            generator: "Visual Studio 17 2022"
-            package_generator: ZIP
+            CMAKE_GENERATOR: "Visual Studio 17 2022"
+            CPACK_GENERATOR: ZIP
 
     steps:
       - uses: actions/checkout@v2
@@ -79,7 +79,7 @@ jobs:
             ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
             ${{ env.LOCALAPPDATA }}\vcpkg\archives
             ${{ env.APPDATA }}\vcpkg\archives
-          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ hashFiles('./vcpkg.json')}}-${{ matrix.generator }}-${{ hashFiles('**/CMakeLists.txt') }}
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ hashFiles('./vcpkg.json')}}-${{ matrix.CMAKE_GENERATOR }}-${{ hashFiles('**/CMakeLists.txt') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.compiler }}-${{ hashFiles('./vcpkg.json') }}-
 
@@ -107,30 +107,26 @@ jobs:
         with:
           languages: "cpp"
 
-      - name: Test and Coverage
+      - name: Build, Test, Coverage, Install
         run: |
-          task test
-          task test_release
-          task test_install
+          task coverage
+          task coverage_release
+          task install
         env:
-          CMAKE_GENERATOR: ${{matrix.generator}}
+          CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
+          CPACK_GENERATOR: ${{matrix.CPACK_GENERATOR}}
+          GCOV_EXECUTABLE: ${{matrix.GCOV_EXECUTABLE}}
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
         uses: github/codeql-action/analyze@v1
 
-      - name: CPack
-        if: matrix.package_generator != ''
-        working-directory: ./build
-        run: |
-          cpack -C ${{matrix.build_type}} -G ${{matrix.package_generator}}
-
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
-        if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.package_generator != '' }}
+        if: ${{ startsWith(github.ref, 'refs/tags/') && matrix.CPACK_GENERATOR != '' }}
         with:
           files: |
-            build/*-*${{ matrix.build_type }}*-*.*
+            build/*-*Release*-*.*
 
       - name: Publish to codecov
         uses: codecov/codecov-action@v2
