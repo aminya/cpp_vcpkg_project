@@ -22,7 +22,8 @@ tasks:
     cmds:
       - |
         {{if eq OS "windows"}}
-          OpenCppCoverage.exe --export_type cobertura:./build/coverage.xml --cover_children --quiet -- task run_template
+          OpenCppCoverage.exe --export_type html:./build/coverage --export_type cobertura:./build/coverage.xml --cover_children --sources "my_exe\*" --sources "my_lib\*" --sources "my_header_lib\*" --modules "build\*" -- task run_template
+          echo "[info] Open './build/coverage/index.html' in your browser for a visual coverage report"
         {{else}}
           task run_template
           gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable '{{.GCOV_EXECUTABLE | default "gcov"}}'
