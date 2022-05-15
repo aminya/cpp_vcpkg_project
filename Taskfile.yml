@@ -1,0 +1,63 @@
+# Notes
+# - install task from: https://taskfile.dev/#/installation or use `setup-cpp --task true`
+# - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or set CMAKE_GENERATOR to "Visual Studio 17 2022"
+
+version: 3
+
+tasks:
+  build:
+    - task: release
+
+  release:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Release -DFEATURE_TESTS:BOOL=OFF
+    - cmake --build ./build --config Release
+
+  debug:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=OFF
+    - cmake --build ./build --config Debug
+
+  test:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=ON
+    - cmake --build ./build --config Debug
+    - (cd build/my_exe/test && ctest -C Debug --output-on-failure)
+    - (cd build/my_header_lib/test && ctest -C Debug --output-on-failure)
+    - (cd build/my_lib/test && ctest -C Debug --output-on-failure)
+
+  test_release:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DFEATURE_TESTS:BOOL=ON
+    - cmake --build ./build --config RelWithDebInfo
+    - (cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
+    - (cd build/my_header_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+    - (cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+
+  test_install:
+    - task: test_release
+    - cmake --install ./build --prefix ./build/test_install
+
+  docs:
+    - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
+    - cmake --build ./build --target doxygen-docs --config Debug
+
+  lint:
+    - |
+      {{if eq OS "windows"}}
+        powershell -c '$files=(git ls-files --exclude-standard); foreach ($file in $files) { if ((get-item $file).Extension -in ".cpp", ".hpp", ".c", ".cc", ".cxx", ".hxx", ".ixx") { clang-format -i -style=file $file } }'
+      {{else}}
+        git ls-files --exclude-standard | grep -E '\.(cpp|hpp|c|cc|cxx|hxx|ixx)$' | xargs clang-format -i -style=file
+      {{end}}
+    - |
+      {{if eq OS "windows"}}
+      powershell -c '$files=(git ls-files --exclude-standard); foreach ($file in $files) { $item=(get-item $file); if (($item.Name -eq "CMakeLists.txt") -or ($item.Extension -in ".cmake")) { cmake-format --in-place $file; cmake-lint $file --disabled-codes C0103 C0301 R0912 R0915 R0913 --suppress-decorations } }'
+      {{else}}
+        git ls-files --exclude-standard | grep -E '(CMakeLists\.txt)|(\.(cmake))$' | xargs cmake-format --in-place | xargs cmake-lint --disabled-codes C0103 C0301 R0912 R0915 R0913 --suppress-decorations
+      {{end}}
+
+    - ~/vcpkg/vcpkg format-manifest ./test/vcpkg.json ./test_install/vcpkg.json
+    - npx -y cspell lint --no-progress --show-suggestions
+
+  clean: |
+    {{if eq OS "windows"}}
+      powershell -c 'function rmrf($path) { if (test-path $path) { rm -r -force $path }}; rmrf ./test/build; rmrf ./test_install/build/; rmrf ./install'
+    {{else}}
+      rm -rf ./test/build ./test_install/build/ ./install
+    {{end}}

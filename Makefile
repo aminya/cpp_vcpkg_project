@@ -5,8 +5,15 @@
 .PHONY: build test test_release docs format clean
 
 build:
+	make release
+
+release:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Release -DFEATURE_TESTS:BOOL=OFF
 	cmake --build ./build --config Release
+
+debug:
+	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=OFF
+	cmake --build ./build --config Debug
 
 test:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=ON
@@ -25,7 +32,7 @@ test_release:
 	(cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
 
 test_install:
-	cmake --install ./build --prefix ./install
+	cmake --install ./build --prefix ./build/test_install
 
 docs:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
