@@ -46,18 +46,18 @@ jobs:
             compiler: gcc
 
         include:
-          # Inject GCOV_EXECUTABLE variable for gcc
+          # Inject GCOV variable for gcc
           - compiler: gcc
-            GCOV_EXECUTABLE: gcov
-          # Inject GCOV_EXECUTABLE variable for llvm
+            GCOV: gcov
+          # Inject GCOV variable for llvm
           - compiler: llvm
-            GCOV_EXECUTABLE: "llvm-cov gcov"
+            GCOV: "llvm-cov gcov"
 
           # Only to test non-multiconfig builds
           - os: ubuntu-20.04
             compiler: gcc-11
             CMAKE_GENERATOR: "Unix Makefiles"
-            GCOV_EXECUTABLE: gcov
+            GCOV: gcov
 
           - os: windows-2022
             compiler: msvc
@@ -111,14 +111,14 @@ jobs:
           task coverage
         env:
           CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
-          GCOV_EXECUTABLE: ${{matrix.GCOV_EXECUTABLE}}
+          GCOV: ${{matrix.GCOV}}
 
       - name: Test release
         run: |
           task test_release
         env:
           CMAKE_GENERATOR: ${{matrix.CMAKE_GENERATOR}}
-          GCOV_EXECUTABLE: ${{matrix.GCOV_EXECUTABLE}}
+          GCOV: ${{matrix.GCOV}}
 
       - name: Install
         run: |

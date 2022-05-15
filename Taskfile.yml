@@ -29,7 +29,7 @@ tasks:
           powershell -c "if (!\$env:CI) { echo '[info] Opening ./build/coverage/index.html...'; start ./build/coverage/index.html }"
         {{else}}
           task run_template
-          gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable '{{.GCOV_EXECUTABLE | default "gcov"}}'
+          gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build
         {{end}}
     env:
       CMAKE_BUILD_TYPE: "{{.CMAKE_BUILD_TYPE}}"
@@ -85,7 +85,6 @@ tasks:
         CMAKE_BUILD_TYPE: Debug
     - task: coverage_template
       vars:
-        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
         CMAKE_BUILD_TYPE: Debug
 
   coverage_release_debug:
@@ -95,7 +94,6 @@ tasks:
         CMAKE_BUILD_TYPE: RelWithDebInfo
     - task: coverage_template
       vars:
-        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
         CMAKE_BUILD_TYPE: RelWithDebInfo
 
   coverage_release:
@@ -106,7 +104,6 @@ tasks:
     - task: coverage_template
       vars:
         TEST_COMMAND: task run_template
-        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
         CMAKE_BUILD_TYPE: Release
 
   docs:
