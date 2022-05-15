@@ -20,16 +20,20 @@ tasks:
   # Run with coverage analysis
   coverage_template:
     cmds:
+      # Set --sources "your_source_folder\*" and --filter "your_source_folder/" to have a clean coverage report
       - |
         {{if eq OS "windows"}}
-          # Set the --sources "your_source_folder\*" to have a clean coverage report
 
           OpenCppCoverage.exe --export_type html:./build/coverage --export_type cobertura:./build/coverage.xml --cover_children --sources "my_exe\*" --sources "my_lib\*" --sources "my_header_lib\*" --modules "build\*" -- task run_template
 
           powershell -c "if (!\$env:CI) { echo '[info] Opening ./build/coverage/index.html...'; start ./build/coverage/index.html }"
         {{else}}
           task run_template
-          gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build
+          mkdir -p ./build/coverage/
+
+          gcovr -j {{.nproc | default 1}} --delete --filter "my_exe/" --filter "my_lib/" --filter "my_header_lib/" --root ./ --print-summary --html-details ./build/coverage/index.html --xml-pretty --xml ./build/coverage.xml ./build
+
+          echo "Open ./build/coverage/index.html in a browser for a visual coverage report"
         {{end}}
     env:
       CMAKE_BUILD_TYPE: "{{.CMAKE_BUILD_TYPE}}"
