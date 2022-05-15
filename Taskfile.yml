@@ -26,6 +26,14 @@ tasks:
       - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
       - (cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
 
+  coverage_template: |
+    {{if eq OS "windows"}}
+      OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children --quiet -- {{.TEST_COMMAND}}
+    {{else}}
+      {{.TEST_COMMAND}}
+      gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable {{.GCOV_EXECUTABLE | default "gcov"}}
+    {{end}}
+
   release:
     - task: build_template
       vars:
@@ -62,6 +70,13 @@ tasks:
   test_install:
     - task: test_release
     - cmake --install ./build --prefix ./install
+
+  coverage:
+    - task: coverage_template
+      vars:
+        TEST_COMMAND: task test
+        nproc: "{{.nproc}}"
+        GCOV_EXECUTABLE: "{{.GCOV_EXECUTABLE}}"
 
   docs:
     - task: debug

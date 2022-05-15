@@ -43,6 +43,14 @@ test_release:
 test_install:
 	cmake --install ./build --prefix ./build/test_install
 
+coverage:
+ifeq ($(OS), Windows_NT)
+	OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- make test
+else
+	make test
+	gcovr -j 1 --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable gcov
+endif
+
 docs:
 	cmake ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
 	cmake --build ./build --target doxygen-docs --config Debug
