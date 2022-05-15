@@ -29,8 +29,8 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
-          - macos-10.15
-          - windows-2019
+          - macos-11
+          - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
           - llvm
@@ -41,9 +41,9 @@ jobs:
           - ZIP
 
         exclude:
-          # mingw is determined by this author to be too buggy to support
-          - os: windows-2019
-            compiler: gcc-11
+          # mingw is excluded because of the bugs that make it fail
+          - os: windows-2022
+            compiler: gcc
 
         include:
           # Inject GCOV_EXECUTABLE variable for gcc
