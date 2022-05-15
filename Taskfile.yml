@@ -35,7 +35,7 @@ tasks:
       OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children --quiet -- {{.TEST_COMMAND}}
     {{else}}
       {{.TEST_COMMAND}}
-      gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable {{.GCOV_EXECUTABLE | default "gcov"}}
+      gcovr -j {{.nproc | default 1}} --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable '{{.GCOV_EXECUTABLE | default "gcov"}}'
     {{end}}
 
   release:
