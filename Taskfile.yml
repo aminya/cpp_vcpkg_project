@@ -1,21 +1,30 @@
 # Notes
 # - install task from: https://taskfile.dev/#/installation or use `setup-cpp --task true`
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or set CMAKE_GENERATOR to "Visual Studio 17 2022"
+# The templates called in the other tasks. The variables can be set using the `vars` parameter or by enviroment variables. The variables are not automatically forwared to the called tasks
 
 version: 3
 
 tasks:
-  # the templates called in the other tasks. The variables can be set using the `vars` parameter or by enviroment variables.
-  # Extra flags can be passed by defining `CONFIGURE_FLAGS` and `BUILD_FLAGS`
   build_template:
+    # Extra flags can be passed by defining `CONFIGURE_FLAGS` and `BUILD_FLAGS`
     - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING={{.CMAKE_BUILD_TYPE}} -DFEATURE_TESTS:BOOL={{.FEATURE_TESTS}} -DFEATURE_DOCS:BOOL='{{.FEATURE_DOCS | default "OFF"}}' {{.CONFIGURE_FLAGS}}
     - cmake --build ./build --config {{.CMAKE_BUILD_TYPE}} {{.BUILD_FLAGS}}
 
   test_template:
-    - task: build_template
-    - (cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
-    - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
-    - (cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+    cmds:
+      - task: build_template
+        vars:
+          CMAKE_GENERATOR: "{{.CMAKE_GENERATOR}}"
+          CMAKE_BUILD_TYPE: "{{.CMAKE_BUILD_TYPE}}"
+          FEATURE_TESTS: "{{.FEATURE_TESTS}}"
+          FEATURE_DOCS: "{{.FEATURE_DOCS}}"
+          CONFIGURE_FLAGS: "{{.CONFIGURE_FLAGS}}"
+          BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+
+      - (cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+      - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
+      - (cd build/my_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
 
   release:
     - task: build_template
