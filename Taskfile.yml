@@ -7,12 +7,13 @@ version: 3
 
 tasks:
   build_template:
-    # Extra flags can be passed by defining `CONFIGURE_FLAGS` and `BUILD_FLAGS`
+    # This template accepts the generator, build type and feature flags defined by the vars. Other flags can be passed by `CONFIGURE_FLAGS` and `BUILD_FLAGS`. For example, a specific target can be built by setting BUILD_FLAGS to "--target <NAME>"
     - cmake ./ -B ./build -G '{{.CMAKE_GENERATOR | default "Ninja Multi-Config"}}' -DCMAKE_BUILD_TYPE:STRING={{.CMAKE_BUILD_TYPE}} -DFEATURE_TESTS:BOOL={{.FEATURE_TESTS}} -DFEATURE_DOCS:BOOL='{{.FEATURE_DOCS | default "OFF"}}' {{.CONFIGURE_FLAGS}}
     - cmake --build ./build --config {{.CMAKE_BUILD_TYPE}} {{.BUILD_FLAGS}}
 
   test_template:
     cmds:
+      # build before testing
       - task: build_template
         vars:
           CMAKE_GENERATOR: "{{.CMAKE_GENERATOR}}"
@@ -21,6 +22,9 @@ tasks:
           FEATURE_DOCS: "{{.FEATURE_DOCS}}"
           CONFIGURE_FLAGS: "{{.CONFIGURE_FLAGS}}"
           BUILD_FLAGS: "{{.BUILD_FLAGS}}"
+
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
 
       - (cd build/my_exe/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
       - (cd build/my_header_lib/test && ctest -C {{.CMAKE_BUILD_TYPE}} --output-on-failure)
