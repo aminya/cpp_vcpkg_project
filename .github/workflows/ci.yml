@@ -67,13 +67,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Cache
-        uses: ./.github/actions/setup_cache
+      - name: Cache
+        uses: actions/cache@v2
         with:
-          compiler: ${{ matrix.compiler }}
-          build_type: ${{ matrix.build_type }}
-          developer_mode: ${{ matrix.developer_mode }}
-          generator: ${{ matrix.generator }}
+          path: |
+            ~/vcpkg
+            ./build/vcpkg_installed
+            ${{ env.CONAN_USER_HOME }}
+            ~/.cache/pip
+            ${{ env.HOME }}/.cache/vcpkg/archives
+            ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+            ${{ env.LOCALAPPDATA }}\vcpkg\archives
+            ${{ env.APPDATA }}\vcpkg\archives
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ hashFiles('./vcpkg.json')}}-${{ matrix.generator }}-${{ hashFiles('**/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.compiler }}-${{ hashFiles('./vcpkg.json') }}-
 
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
