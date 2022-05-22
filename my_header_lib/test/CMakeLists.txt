@@ -31,3 +31,7 @@ catch_discover_tests(my_header_lib_tests ${COVERAGE_ARGS})
 
 # constexpr tests
 add_subdirectory("./constexpr")
+
+if(FEATURE_FUZZ_TESTS)
+  add_subdirectory("./fuzz")
+endif()

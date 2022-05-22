@@ -100,10 +100,6 @@ package_project(
   PUBLIC_INCLUDES
   ${my_lib_INCLUDE_DIR})
 
-if(FEATURE_FUZZ_TESTS)
-  add_subdirectory(fuzz_test)
-endif()
-
 # If MSVC is being used, and ASAN is enabled, we need to set the debugger environment
 # so that it behaves well with MSVC's debugger, and we can run the target from visual studio
 if(MSVC)
