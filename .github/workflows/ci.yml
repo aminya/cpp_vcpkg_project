@@ -41,11 +41,6 @@ jobs:
         CPACK_GENERATOR:
           - ZIP
 
-        exclude:
-          # mingw is excluded because of the bugs that make it fail
-          - os: windows-2022
-            compiler: gcc
-
         include:
           # Inject GCOV variable for gcc
           - compiler: gcc
@@ -63,6 +58,11 @@ jobs:
           - os: windows-2022
             compiler: msvc
             CMAKE_GENERATOR: "Visual Studio 17 2022"
+
+        # To exclude a specific job from the matrix (e.g gcc on Windows), you can use this syntax.
+        # exclude:
+        #   - os: windows-2022
+        #     compiler: gcc
 
     steps:
       - uses: actions/checkout@v2
