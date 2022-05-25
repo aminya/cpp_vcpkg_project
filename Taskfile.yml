@@ -111,8 +111,9 @@ tasks:
         CMAKE_BUILD_TYPE: Release
 
   docs:
-    - task: debug
+    - task: build_template
       vars:
+        CMAKE_BUILD_TYPE: Debug
         FEATURE_DOCS: ON
         BUILD_FLAGS: --target doxygen-docs
 
