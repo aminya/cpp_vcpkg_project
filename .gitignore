@@ -7,7 +7,7 @@ conan-cache/
 .cache/
 coverage.xml
 
-# User spesific settings
+# User specific settings
 CMakeUserPresets.json
 
 # IDE files

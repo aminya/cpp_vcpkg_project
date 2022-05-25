@@ -73,7 +73,7 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
         neovim emacs nano
 
-# Install optional dependecies
+# Install optional dependencies
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
         doxygen graphviz ccache cppcheck
