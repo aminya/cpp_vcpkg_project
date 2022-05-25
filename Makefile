@@ -1,5 +1,6 @@
+#! Prefer using task with Taskfile.yml, which is a cross-platform replacement for Makefile with better error-handling and syntax.
+
 # Notes:
-# - Also look at Taskfile.yml, which is a modern replacement for Makefile
 # - list all the task under PHONY
 # - If getting missing separator error, try replacing spaces with tabs.
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or remove the Ninja generator from the commands.
