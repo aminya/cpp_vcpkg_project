@@ -28,7 +28,7 @@ target_link_libraries(
           ${my_exe_LINKED_LIBRARIES})
 
 # generate a main function for the test executable
-target_compile_definitions(my_exe_helpers_tests PRIVATE CATCH_CONFIG_MAIN)
+target_compile_definitions(my_exe_helpers_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
 
 # use xml reporter if coverage is enabled
 if(${ENABLE_COVERAGE})
