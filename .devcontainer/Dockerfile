@@ -8,7 +8,7 @@ ARG VARIANT
 # Install necessary packages available from standard repos
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
-        software-properties-common wget apt-utils file zip \
+        software-properties-common wget apt-utils file zip unzip pkg-config \
         openssh-client gpg-agent socat rsync \
         make ninja-build git \
         python3 python3-pip
