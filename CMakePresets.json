@@ -75,7 +75,7 @@
                 "CMAKE_CXX_COMPILER": "cl",
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "ENABLE_DEVELOPER_MODE": "ON"
-             }
+            }
         },
         {
             "name": "windows-msvc-debug-user-mode",
@@ -87,7 +87,7 @@
                 "CMAKE_CXX_COMPILER": "cl",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "ENABLE_DEVELOPER_MODE": "OFF"
-             }
+            }
         },
         {
             "name": "windows-msvc-release-user-mode",
@@ -99,7 +99,7 @@
                 "CMAKE_CXX_COMPILER": "cl",
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "ENABLE_DEVELOPER_MODE": "OFF"
-             }
+            }
         },
         {
             "name": "windows-clang-debug",
@@ -141,7 +141,8 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "FEATURE_TESTS": true
             }
         },
         {
@@ -163,7 +164,8 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "FEATURE_TESTS": true
             }
         },
         {
