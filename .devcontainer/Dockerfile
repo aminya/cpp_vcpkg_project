@@ -76,7 +76,7 @@ RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
 # Install optional dependencies
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
-        doxygen graphviz ccache cppcheck
+        doxygen graphviz ccache cppcheck gcovr
 
 # Install include-what-you-use
 ENV IWYU /home/iwyu
