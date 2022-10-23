@@ -29,8 +29,8 @@ jobs:
       # and your own projects needs
       matrix:
         os:
-          - ubuntu-20.04
-          - macos-11
+          - ubuntu-22.04
+          - macos-12
           - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
@@ -50,7 +50,7 @@ jobs:
             GCOV: "llvm-cov gcov"
 
           # Only to test non-multiconfig builds
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             compiler: gcc-11
             CMAKE_GENERATOR: "Unix Makefiles"
             GCOV: gcov
@@ -65,10 +65,10 @@ jobs:
         #     compiler: gcc
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/vcpkg
