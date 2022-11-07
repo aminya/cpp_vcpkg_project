@@ -53,7 +53,7 @@ jobs:
           - os: ubuntu-22.04
             compiler: gcc-11
             CMAKE_GENERATOR: "Unix Makefiles"
-            GCOV: gcov
+            GCOV: gcov-11
 
           - os: windows-2022
             compiler: msvc
