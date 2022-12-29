@@ -50,12 +50,12 @@ tasks:
         FEATURE_TESTS: OFF
         CMAKE_BUILD_TYPE: Debug
 
-  cross_build_mingw:
+  build_cross_mingw:
     - task: build_template
       vars:
         FEATURE_TESTS: OFF
         CMAKE_BUILD_TYPE: Release
-        CONFIGURE_FLAGS: -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="/home/cmake/toolchains/x86_64-w64-mingw32.toolchain.cmake" -DVCPKG_TARGET_TRIPLET="x64-mingw-dynamic"
+        CONFIGURE_FLAGS: -DENABLE_CROSS_COMPILING:BOOL=ON -DDEFAULT_TRIPLET=x64-mingw-dynamic
 
   install:
     - task: build
