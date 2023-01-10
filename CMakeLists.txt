@@ -4,21 +4,13 @@ cmake_minimum_required(VERSION 3.16)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
-
 # Add project_options
 # https://github.com/aminya/project_options
 # Change the version to update the package (watch the releases of the repository for future updates)
-include(cmake/CPM.cmake)
-CPMAddPackage(
-  NAME              project_options
-  GITHUB_REPOSITORY aminya/project_options
-  #VERSION           0.26.3
-  GIT_TAG           main
-  DOWNLOAD_ONLY
-)
-if(project_options_ADDED)
-  include(${project_options_SOURCE_DIR}/Index.cmake)
-endif()
+include(FetchContent)
+FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.26.3.zip)
+FetchContent_MakeAvailable(_project_options)
+include(${_project_options_SOURCE_DIR}/Index.cmake)
 
 # Define the features of the project
 include("./Features.cmake")
