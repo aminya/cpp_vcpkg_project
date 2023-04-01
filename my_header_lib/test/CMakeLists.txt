@@ -1,25 +1,17 @@
 # test dependencies
-set(tests_DEPENDENCIES_CONFIGURED Catch2)
-
-foreach(DEPENDENCY ${tests_DEPENDENCIES_CONFIGURED})
-  find_package(${DEPENDENCY} CONFIG REQUIRED)
-endforeach()
-
 include(CTest)
-include(Catch)
 
 # test executable
-
 add_executable(my_header_lib_tests "./tests.cpp")
 
 target_link_libraries(
   my_header_lib_tests
-  PRIVATE my_header_lib
-          my_project_warnings
-          my_project_options
-          Catch2::Catch2)
-# generate a main function for the test executable
-target_compile_definitions(my_header_lib_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
+  PRIVATE
+  my_header_lib
+  my_project_warnings
+  my_project_options
+  catch2_test_common
+)
 
 # use xml reporter if coverage is enabled
 if(${ENABLE_COVERAGE})

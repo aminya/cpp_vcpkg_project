@@ -1,36 +1,30 @@
 # test dependencies
-set(tests_DEPENDENCIES_CONFIGURED Catch2)
-
-foreach(DEPENDENCY ${tests_DEPENDENCIES_CONFIGURED})
-  find_package(${DEPENDENCY} CONFIG REQUIRED)
-endforeach()
-
 include(CTest)
-include(Catch)
 
-# calling my_exe executable directly
-add_test(
+# ----------------------------------------------------------------------------------------------------------------------
+# test the executable part
+add_test( # calling my_exe executable directly
   NAME my_exe_test
   COMMAND my_exe ""
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-# testing helpers
-add_executable(my_exe_helpers_tests "./tests.cpp")
-
-# because my_exe helpers and dependencies are private, we should link them here again
-target_include_directories(my_exe_helpers_tests PRIVATE "${my_exe_INCLUDE_DIR}")
-
+# ----------------------------------------------------------------------------------------------------------------------
+# test the library part
+add_executable(my_exe_lib_tests "./tests.cpp")
 target_link_libraries(
-  my_exe_helpers_tests
-  PRIVATE my_project_warnings
-          my_project_options
-          Catch2::Catch2
-          ${my_exe_LINKED_LIBRARIES})
-
-# generate a main function for the test executable
-target_compile_definitions(my_exe_helpers_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
+  my_exe_lib_tests
+  PRIVATE
+  my_project_warnings
+  my_project_options
+  catch2_test_common
+  my_exe_lib
+)
 
 # use xml reporter if coverage is enabled
 if(${ENABLE_COVERAGE})
   set(COVERAGE_ARGS REPORTER xml)
 endif()
+
+# automatically discover tests that are defined in catch based test files you can modify the tests
+catch_discover_tests(my_exe_lib_tests ${COVERAGE_ARGS})

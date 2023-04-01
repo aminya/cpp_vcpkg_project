@@ -52,6 +52,23 @@ if(FEATURE_TESTS)
       set(ENABLE_SANITIZER_ADDRESS "ENABLE_SANITIZER_ADDRESS")
     endif()
   endif()
+
+  add_library(catch2_test_common INTERFACE)
+  target_find_dependencies(catch2_test_common
+    INTERFACE_CONFIG
+    Catch2
+  )
+  target_link_libraries(catch2_test_common
+    INTERFACE
+    Catch2::Catch2
+  )
+  # generate a main function for the test executable
+  target_compile_definitions(catch2_test_common 
+    INTERFACE
+    CATCH_CONFIG_MAIN
+    DO_NOT_USE_WMAIN
+  )
+  include(Catch)
 endif()
 
 if(FEATURE_DOCS)
