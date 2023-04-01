@@ -1,5 +1,6 @@
 add_library(my_header_lib INTERFACE)
-target_link_libraries(my_header_lib INTERFACE project_options project_warnings) # link project_options/warnings
+target_link_libraries(my_header_lib INTERFACE my_project_options my_project_warnings
+)# link project_options/warnings
 
 # Includes
 set(my_header_lib_INCLUDE_DIR

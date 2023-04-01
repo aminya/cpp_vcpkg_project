@@ -4,11 +4,11 @@ cmake_minimum_required(VERSION 3.16)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
-# Add project_options
-# https://github.com/aminya/project_options
-# Change the version to update the package (watch the releases of the repository for future updates)
+# Add project_options from https://github.com/aminya/project_options
+# Change the version in the following URL to update the package (watch the releases of the repository for future updates)
 include(FetchContent)
-FetchContent_Declare(_project_options URL https://github.com/aminya/project_options/archive/refs/tags/v0.26.3.zip)
+FetchContent_Declare(_project_options
+                     URL https://github.com/aminya/project_options/archive/refs/tags/v0.27.0.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -25,7 +25,7 @@ run_vcpkg()
 # Set the project name and language
 project(
   cpp_vcpkg_project
-  VERSION 0.0.1
+  VERSION 0.0.0
   DESCRIPTION ""
   HOMEPAGE_URL "https://github.com/cpp-best-practices/cpp_vcpkg_project"
   LANGUAGES CXX C)
@@ -68,6 +68,9 @@ endif()
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
+  # a unique prefix to be added before the project_options and project_warnings name
+  PREFIX
+  "my"
   ENABLE_CACHE
   ${ENABLE_CPPCHECK}
   ${ENABLE_CLANG_TIDY}
@@ -101,8 +104,8 @@ package_project(
   my_exe
   my_lib
   my_header_lib
-  project_options
-  project_warnings
+  my_project_options
+  my_project_warnings
   INTERFACE_DEPENDENCIES_CONFIGURED
   ${my_header_lib_DEPENDENCIES_CONFIGURED}
   INTERFACE_INCLUDES

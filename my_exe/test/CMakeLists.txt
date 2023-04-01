@@ -22,8 +22,8 @@ target_include_directories(my_exe_helpers_tests PRIVATE "${my_exe_INCLUDE_DIR}")
 
 target_link_libraries(
   my_exe_helpers_tests
-  PRIVATE project_warnings
-          project_options
+  PRIVATE my_project_warnings
+          my_project_options
           Catch2::Catch2
           ${my_exe_LINKED_LIBRARIES})
 

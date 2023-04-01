@@ -15,8 +15,8 @@ add_executable(my_lib_tests "./tests.cpp")
 target_link_libraries(
   my_lib_tests
   PRIVATE my_lib
-          project_warnings
-          project_options
+          my_project_warnings
+          my_project_options
           Catch2::Catch2)
 # generate a main function for the test executable
 target_compile_definitions(my_lib_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)

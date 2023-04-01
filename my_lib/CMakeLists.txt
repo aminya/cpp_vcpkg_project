@@ -1,5 +1,5 @@
 add_library(my_lib "./src/my_lib/lib.cpp")
-target_link_libraries(my_lib PRIVATE project_options project_warnings) # link project_options/warnings
+target_link_libraries(my_lib PRIVATE my_project_options my_project_warnings) # link project_options/warnings
 
 # Includes
 set(my_lib_INCLUDE_DIR
