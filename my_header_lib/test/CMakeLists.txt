@@ -6,12 +6,10 @@ add_executable(my_header_lib_tests "./tests.cpp")
 
 target_link_libraries(
   my_header_lib_tests
-  PRIVATE
-  my_header_lib
-  my_project_warnings
-  my_project_options
-  catch2_test_common
-)
+  PRIVATE my_header_lib
+          my_project_warnings
+          my_project_options
+          catch2_test_common)
 
 # use xml reporter if coverage is enabled
 if(${ENABLE_COVERAGE})
