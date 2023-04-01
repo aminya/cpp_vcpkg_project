@@ -7,9 +7,8 @@ cmake_minimum_required(VERSION 3.16)
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
 include(FetchContent)
-FetchContent_Declare(_project_options URL
-  https://github.com/aminya/project_options/archive/refs/tags/v0.27.0.zip
-)
+FetchContent_Declare(_project_options
+                     URL https://github.com/aminya/project_options/archive/refs/tags/v0.27.0.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -65,6 +64,9 @@ endif()
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
+  # a unique prefix to be added before the project_options and project_warnings name
+  PREFIX
+  "my"
   ENABLE_CACHE
   ${ENABLE_CPPCHECK}
   ${ENABLE_CLANG_TIDY}
@@ -98,8 +100,8 @@ package_project(
   my_exe
   my_lib
   my_header_lib
-  project_options
-  project_warnings
+  my_project_options
+  my_project_warnings
   INTERFACE_DEPENDENCIES_CONFIGURED
   ${my_header_lib_DEPENDENCIES_CONFIGURED}
   INTERFACE_INCLUDES

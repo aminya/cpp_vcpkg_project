@@ -4,8 +4,8 @@ add_executable(my_lib_constexpr_tests "./constexpr_tests.cpp")
 target_link_libraries(
   my_lib_constexpr_tests
   PRIVATE my_lib
-          project_warnings
-          project_options
+          my_project_warnings
+          my_project_options
           Catch2::Catch2)
 target_compile_definitions(my_lib_constexpr_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
 
@@ -18,8 +18,8 @@ add_executable(my_lib_relaxed_constexpr_tests "./constexpr_tests.cpp")
 target_link_libraries(
   my_lib_relaxed_constexpr_tests
   PRIVATE my_lib
-          project_warnings
-          project_options
+          my_project_warnings
+          my_project_options
           Catch2::Catch2)
 target_compile_definitions(my_lib_relaxed_constexpr_tests PRIVATE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
 target_compile_definitions(my_lib_relaxed_constexpr_tests PRIVATE -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE)
