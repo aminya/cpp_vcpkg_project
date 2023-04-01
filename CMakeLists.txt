@@ -15,6 +15,10 @@ include(${_project_options_SOURCE_DIR}/Index.cmake)
 # Define the features of the project
 include("./Features.cmake")
 
+# enable cross-compiling: - should be called before run_vcpkg()
+if(ENABLE_CROSS_COMPILING)
+  enable_cross_compiler()
+endif()
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg()
 
