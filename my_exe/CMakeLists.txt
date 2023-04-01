@@ -6,8 +6,8 @@ add_library(my_exe_lib INTERFACE) # use interface or normal library according to
 # link project_options/warnings
 target_link_libraries(my_exe_lib
   INTERFACE
-  project_options
-  project_warnings
+  my_project_options
+  my_project_warnings
 )
 
 # Includes
