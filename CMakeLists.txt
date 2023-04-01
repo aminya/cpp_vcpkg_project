@@ -102,12 +102,7 @@ package_project(
   my_header_lib
   my_project_options
   my_project_warnings
-  INTERFACE_DEPENDENCIES_CONFIGURED
-  ${my_header_lib_DEPENDENCIES_CONFIGURED}
-  INTERFACE_INCLUDES
-  ${my_header_lib_INCLUDE_DIR}
-  PUBLIC_INCLUDES
-  ${my_lib_INCLUDE_DIR})
+)
 
 if(FEATURE_FUZZ_TESTS)
   add_subdirectory(fuzz_test)
