@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.16)
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
 include(FetchContent)
 FetchContent_Declare(_project_options
-                     URL https://github.com/aminya/project_options/archive/refs/tags/v0.27.0.zip)
+                     URL https://github.com/aminya/project_options/archive/refs/tags/v0.27.1.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -56,6 +56,15 @@ if(FEATURE_TESTS)
       set(ENABLE_SANITIZER_ADDRESS "ENABLE_SANITIZER_ADDRESS")
     endif()
   endif()
+
+  add_library(catch2_test_common INTERFACE)
+  target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
+  target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2)
+  # generate a main function for the test executable
+  target_compile_definitions(catch2_test_common
+    INTERFACE CATCH_CONFIG_MAIN
+              DO_NOT_USE_WMAIN)
+  include(Catch)
 endif()
 
 if(FEATURE_DOCS)
@@ -105,13 +114,7 @@ package_project(
   my_lib
   my_header_lib
   my_project_options
-  my_project_warnings
-  INTERFACE_DEPENDENCIES_CONFIGURED
-  ${my_header_lib_DEPENDENCIES_CONFIGURED}
-  INTERFACE_INCLUDES
-  ${my_header_lib_INCLUDE_DIR}
-  PUBLIC_INCLUDES
-  ${my_lib_INCLUDE_DIR})
+  my_project_warnings)
 
 if(FEATURE_FUZZ_TESTS)
   add_subdirectory(fuzz_test)

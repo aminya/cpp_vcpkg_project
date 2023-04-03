@@ -1,26 +1,39 @@
-add_executable(my_exe "./src/main.cpp")
-target_link_libraries(my_exe PRIVATE my_project_options my_project_warnings) # link project_options/warnings
+# Seperate library part and executable part (`main()` function) to simplify testing.
+
+# ----------------------------------------------------------------------------------------------------------------------
+# library part
+add_library(my_exe_lib INTERFACE) # use interface or normal library according to the implementation
+# link project_options/warnings
+target_link_libraries(my_exe_lib
+  INTERFACE my_project_options
+            my_project_warnings)
 
 # Includes
-# because my_exe includes are private, it uses absolute paths.
-set(my_exe_INCLUDE_DIR
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    CACHE STRING "")
-target_include_directories(my_exe PRIVATE "${my_exe_INCLUDE_DIR}")
+target_include_interface_directories(my_exe_lib include)
 
 # Find dependencies:
-set(my_exe_DEPENDENCIES_CONFIGURED
-    fmt
-    CACHE STRING "")
+target_find_dependencies(my_exe_lib INTERFACE_CONFIG fmt)
 
-foreach(DEPENDENCY ${my_exe_DEPENDENCIES_CONFIGURED})
-  find_package(${DEPENDENCY} CONFIG REQUIRED)
-endforeach()
+# Link dependencies:
+target_link_system_libraries(my_exe_lib INTERFACE fmt::fmt)
+
+# ----------------------------------------------------------------------------------------------------------------------
+# executable part
+add_executable(my_exe "./src/main.cpp") # just for `main.cpp` which contains `main()` function
+# link project_options/warnings
+target_link_libraries(my_exe PRIVATE my_project_options my_project_warnings)
+
+# Includes, just link the library part
+target_link_libraries(my_exe PRIVATE my_exe_lib)
+
+# Find dependencies:
+target_find_dependencies(my_exe PRIVATE_CONFIG fmt)
 
 # Link dependencies
-set(my_exe_LINKED_LIBRARIES fmt::fmt)
-target_link_system_libraries(my_exe PRIVATE ${my_exe_LINKED_LIBRARIES})
+target_link_system_libraries(my_exe PRIVATE fmt::fmt)
 
+# ----------------------------------------------------------------------------------------------------------------------
+# tests
 if(FEATURE_TESTS)
   add_subdirectory("./test")
 endif()
