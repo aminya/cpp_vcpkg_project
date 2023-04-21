@@ -1,8 +1,6 @@
 add_library(my_lib "./src/my_lib/lib.cpp")
 # link project_options/warnings
-target_link_libraries(my_lib
-  PRIVATE my_project_options
-          my_project_warnings)
+target_link_libraries(my_lib PRIVATE my_project_options my_project_warnings)
 
 # Includes
 target_include_interface_directories(my_lib include)

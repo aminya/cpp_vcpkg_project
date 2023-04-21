@@ -3,7 +3,8 @@ include(CTest)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # test the executable part
-add_test( # calling my_exe executable directly
+add_test(
+  # calling my_exe executable directly
   NAME my_exe_test
   COMMAND my_exe ""
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})

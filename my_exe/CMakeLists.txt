@@ -1,12 +1,10 @@
-# Seperate library part and executable part (`main()` function) to simplify testing.
+# Separate library part and executable part (`main()` function) to simplify testing.
 
 # ----------------------------------------------------------------------------------------------------------------------
 # library part
 add_library(my_exe_lib INTERFACE) # use interface or normal library according to the implementation
 # link project_options/warnings
-target_link_libraries(my_exe_lib
-  INTERFACE my_project_options
-            my_project_warnings)
+target_link_libraries(my_exe_lib INTERFACE my_project_options my_project_warnings)
 
 # Includes
 target_include_interface_directories(my_exe_lib include)

@@ -4,11 +4,17 @@ cmake_minimum_required(VERSION 3.16)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
+include(FetchContent)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+  cmake_policy(SET CMP0135 NEW)
+endif()
+
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-include(FetchContent)
-FetchContent_Declare(_project_options
-                     URL https://github.com/aminya/project_options/archive/refs/tags/v0.27.2.zip)
+set(PROJECT_OPTIONS_VERSION "v0.27.2")
+FetchContent_Declare(
+  _project_options
+  URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -61,9 +67,7 @@ if(FEATURE_TESTS)
   target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
   target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2)
   # generate a main function for the test executable
-  target_compile_definitions(catch2_test_common
-    INTERFACE CATCH_CONFIG_MAIN
-              DO_NOT_USE_WMAIN)
+  target_compile_definitions(catch2_test_common INTERFACE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
   include(Catch)
 endif()
 

@@ -33,6 +33,7 @@ words:
   - ctest
   - DCATCH
   - DCMAKE
+  - DDEFAULT
   - dearmor
   - DFEATURE
   - DontAlign
