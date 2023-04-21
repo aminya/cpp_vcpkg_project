@@ -21,6 +21,6 @@ target_link_libraries(
           my_project_options
           catch2_test_common)
 target_compile_definitions(my_header_lib_relaxed_constexpr_tests
-  PRIVATE -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE)
+                           PRIVATE -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE)
 
 catch_discover_tests(my_header_lib_relaxed_constexpr_tests ${COVERAGE_ARGS})
