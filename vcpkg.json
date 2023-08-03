@@ -6,7 +6,7 @@
   "dependencies": [
     {
       "name": "fmt",
-      "version>=": "8.1.1"
+      "version>=": "9.1.0#1"
     }
   ],
   "features": {
@@ -15,7 +15,7 @@
       "dependencies": [
         {
           "name": "catch2",
-          "version>=": "2.13.7"
+          "version>=": "2.13.9#1"
         }
       ]
     }

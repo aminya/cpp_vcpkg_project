@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21...3.27)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
@@ -11,10 +11,11 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.27.2")
+set(PROJECT_OPTIONS_VERSION "v0.30.0")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
+
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
 
@@ -31,9 +32,9 @@ run_vcpkg()
 # Set the project name and language
 project(
   cpp_vcpkg_project
-  VERSION 0.0.0
+  VERSION 1.0.1
   DESCRIPTION ""
-  HOMEPAGE_URL "https://github.com/cpp-best-practices/cpp_vcpkg_project"
+  HOMEPAGE_URL "https://github.com/aminya/cpp_vcpkg_project"
   LANGUAGES CXX C)
 
 # enable sanitizers and clang-tidy if running the tests
