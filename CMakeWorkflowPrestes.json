@@ -1,0 +1,135 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default User Config",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/user",
+      "installDir": "${sourceDir}/install",
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": {
+          "type": "path",
+          "value": "${sourceDir}/install"
+        },
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_SKIP_INSTALL_RULES": "NO",
+        "BUILD_SHARED_LIBS": "NO",
+        "FEATURE_TESTS": "NO",
+        "FEATURE_DOCS": "NO"
+      },
+      "environment": {
+        "CPM_USE_LOCAL_PACKAGES": "YES",
+        "CPM_SOURCE_CACHE": "$env{HOME}/.cache/CPM",
+        "PATH": "$env{HOME}/.local/bin${pathListSep}$penv{PATH}"
+      }
+    },
+    {
+      "name": "developer",
+      "inherits": "default",
+      "displayName": "Ninja Multi-Config",
+      "description": "Default build using Ninja Multi-Config generator",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build/deveoper",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_SKIP_INSTALL_RULES": "YES",
+        "BUILD_SHARED_LIBS": "YES",
+        "FEATURE_FUZZ_TESTS": "NO",
+        "FEATURE_TESTS": "YES",
+        "FEATURE_DOCS": "NO"
+      }
+    },
+    {
+      "name": "windows-only",
+      "inherits": "default",
+      "displayName": "Windows-only configuration",
+      "description": "This build is only available on Windows",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default"
+    },
+    {
+      "name": "developer",
+      "configurePreset": "developer"
+    },
+    {
+      "name": "install",
+      "configurePreset": "default",
+      "targets": ["install"]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "developer",
+      "configurePreset": "developer",
+      "configuration": "Debug",
+      "output": {"outputOnFailure": true},
+      "execution": {"noTestsAction": "error", "stopOnFailure": true}
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "generators": [
+        "TGZ"
+      ]
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "default",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "install"
+        },
+        {
+          "type": "package",
+          "name": "default"
+        }
+      ]
+    },
+    {
+      "name": "developer",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "developer"
+        },
+        {
+          "type": "build",
+          "name": "developer"
+        },
+        {
+          "type": "test",
+          "name": "developer"
+        }
+      ]
+    }
+  ]
+}

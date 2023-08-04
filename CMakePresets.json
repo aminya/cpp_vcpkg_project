@@ -5,6 +5,7 @@
         "minor": 25,
         "patch": 0
     },
+    "include": ["CMakeWorkflowPrestes.json"],
     "configurePresets": [
         {
             "name": "conf-common",
