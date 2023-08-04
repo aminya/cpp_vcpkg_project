@@ -45,9 +45,11 @@ set(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR OFF)
 set(ENABLE_COVERAGE OFF)
 
 if(FEATURE_TESTS)
+  # IMHO(CK) either:
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  #XXX set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  # XXX or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
+
   enable_testing()
 
   if(NOT
@@ -99,18 +101,12 @@ project_options(
   # ENABLE_SANITIZER_MEMORY
   # ENABLE_PCH
   # PCH_HEADERS
-  # WARNINGS_AS_ERRORS
+  ${WARNINGS_AS_ERRORS}
   # ENABLE_INCLUDE_WHAT_YOU_USE
   # ENABLE_USER_LINKER
   # ENABLE_BUILD_WITH_TIME_TRACE
   # ENABLE_UNITY
 )
-
-# to get CMAKE_INSTALL_INCLUDEDIR
-include(GNUInstallDirs)
-
-# instead of include(CTest)
-enable_testing()
 
 add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)

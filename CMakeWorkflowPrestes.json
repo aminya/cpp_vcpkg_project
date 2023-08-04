@@ -20,10 +20,11 @@
         },
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_SKIP_INSTALL_RULES": "NO",
-        "BUILD_SHARED_LIBS": "NO",
-        "FEATURE_TESTS": "NO",
-        "FEATURE_DOCS": "NO"
+        "CMAKE_SKIP_INSTALL_RULES": false,
+        "BUILD_SHARED_LIBS": false,
+        "FEATURE_TESTS": false,
+        "FEATURE_DOCS": false,
+        "WARNINGS_AS_ERRORS": false
       },
       "environment": {
         "CPM_USE_LOCAL_PACKAGES": "YES",
@@ -40,11 +41,12 @@
       "binaryDir": "${sourceDir}/build/deveoper",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_SKIP_INSTALL_RULES": "YES",
-        "BUILD_SHARED_LIBS": "YES",
-        "FEATURE_FUZZ_TESTS": "NO",
-        "FEATURE_TESTS": "YES",
-        "FEATURE_DOCS": "NO"
+        "CMAKE_SKIP_INSTALL_RULES": true,
+        "BUILD_SHARED_LIBS": true,
+        "FEATURE_FUZZ_TESTS": false,
+        "FEATURE_TESTS": true,
+        "FEATURE_DOCS": false,
+        "WARNINGS_AS_ERRORS": "WARNINGS_AS_ERRORS"
       }
     },
     {
