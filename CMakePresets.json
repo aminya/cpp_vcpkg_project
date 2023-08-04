@@ -11,8 +11,11 @@
             "description": "General settings that apply to all configurations",
             "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}"
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/install/${presetName}",
+            "cacheVariables": {
+                "FEATURE_DOCS": true
+            }
         },
         {
             "name": "conf-windows-common",
@@ -33,8 +36,8 @@
                 "strategy": "external"
             },
             "cacheVariables": {
-                "ENABLE_CPPCHECK_DEFAULT": "FALSE",
-                "ENABLE_CLANG_TIDY_DEFAULT": "FALSE"
+                "ENABLE_CPPCHECK_DEFAULT": false,
+                "ENABLE_CLANG_TIDY_DEFAULT": false
             }
         },
         {
@@ -54,51 +57,27 @@
             }
         },
         {
-            "name": "windows-msvc-debug-developer-mode",
-            "displayName": "msvc Debug (Developer Mode)",
+            "name": "windows-msvc-debug",
+            "displayName": "msvc Debug",
             "description": "Target Windows with the msvc compiler, debug build type",
             "inherits": "conf-windows-common",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
                 "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_DEVELOPER_MODE": "ON"
+                "FEATURE_DOCS": false,
+                "FEATURE_TESTS": true
             }
         },
         {
-            "name": "windows-msvc-release-developer-mode",
-            "displayName": "msvc Release (Developer Mode)",
+            "name": "windows-msvc-release",
+            "displayName": "msvc Debug",
             "description": "Target Windows with the msvc compiler, release build type",
             "inherits": "conf-windows-common",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl",
                 "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "ENABLE_DEVELOPER_MODE": "ON"
-            }
-        },
-        {
-            "name": "windows-msvc-debug-user-mode",
-            "displayName": "msvc Debug (User Mode)",
-            "description": "Target Windows with the msvc compiler, debug build type",
-            "inherits": "conf-windows-common",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "ENABLE_DEVELOPER_MODE": "OFF"
-            }
-        },
-        {
-            "name": "windows-msvc-release-user-mode",
-            "displayName": "msvc Release (User Mode)",
-            "description": "Target Windows with the msvc compiler, release build type",
-            "inherits": "conf-windows-common",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl",
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "ENABLE_DEVELOPER_MODE": "OFF"
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
         },
         {
@@ -109,7 +88,9 @@
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "clang-cl",
                 "CMAKE_CXX_COMPILER": "clang-cl",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "FEATURE_DOCS": false,
+                "FEATURE_TESTS": true
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -142,6 +123,7 @@
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++",
                 "CMAKE_BUILD_TYPE": "Debug",
+                "FEATURE_DOCS": false,
                 "FEATURE_TESTS": true
             }
         },
@@ -165,7 +147,9 @@
                 "CMAKE_C_COMPILER": "clang",
                 "CMAKE_CXX_COMPILER": "clang++",
                 "CMAKE_BUILD_TYPE": "Debug",
-                "FEATURE_TESTS": true
+                "FEATURE_DOCS": false,
+                "FEATURE_TESTS": true,
+                "FEATURE_FUZZ_TESTS": true
             }
         },
         {
@@ -194,32 +178,18 @@
             }
         },
         {
-            "name": "test-windows-msvc-debug-developer-mode",
+            "name": "windows-msvc-debug",
             "displayName": "Strict",
             "description": "Enable output and stop on failure",
             "inherits": "test-common",
-            "configurePreset": "windows-msvc-debug-developer-mode"
+            "configurePreset": "windows-msvc-debug"
         },
         {
-            "name": "test-windows-msvc-release-developer-mode",
-            "displayName": "Strict",
-            "description": "Enable output and stop on failure",
-            "inherits": "test-common",
-            "configurePreset": "windows-msvc-release-developer-mode"
-        },
-        {
-            "name": "test-windows-clang-debug",
+            "name": "windows-clang-debug",
             "displayName": "Strict",
             "description": "Enable output and stop on failure",
             "inherits": "test-common",
             "configurePreset": "windows-clang-debug"
-        },
-        {
-            "name": "windows-clang-release",
-            "displayName": "Strict",
-            "description": "Enable output and stop on failure",
-            "inherits": "test-common",
-            "configurePreset": "windows-clang-release"
         },
         {
             "name": "gcc-debug",
@@ -229,139 +199,241 @@
             "configurePreset": "gcc-debug"
         },
         {
-            "name": "gcc-release",
-            "displayName": "Strict",
-            "description": "Enable output and stop on failure",
-            "inherits": "test-common",
-            "configurePreset": "gcc-release"
-        },
-        {
             "name": "clang-debug",
             "displayName": "Strict",
             "description": "Enable output and stop on failure",
             "inherits": "test-common",
             "configurePreset": "clang-debug"
-        },
-        {
-            "name": "clang-release",
-            "displayName": "Strict",
-            "description": "Enable output and stop on failure",
-            "inherits": "test-common",
-            "configurePreset": "clang-release"
         }
     ],
     "buildPresets": [
-       {
-          "name": "clang-release",
-          "configurePreset": "clang-release"
-       },
-       {
-          "name": "clang-install",
-          "configurePreset": "clang-release",
-          "targets": ["install"]
-       },
-       {
-          "name": "clang-debug",
-          "configurePreset": "clang-debug"
-       },
-       {
-          "name": "gcc-release",
-          "configurePreset": "gcc-release"
-       },
-       {
-          "name": "gcc-install",
-          "configurePreset": "gcc-release",
-          "targets": ["install"]
-       },
-       {
-          "name": "gcc-debug",
-          "configurePreset": "gcc-debug"
-       }
+        {
+            "name": "windows-msvc-release",
+            "configurePreset": "windows-msvc-release"
+        },
+        {
+            "name": "windows-msvc-install-docs",
+            "configurePreset": "windows-msvc-release",
+            "targets": ["install", "doxygen-docs"]
+        },
+        {
+            "name": "windows-msvc-debug",
+            "configurePreset": "windows-msvc-debug"
+        },
+        {
+            "name": "windows-clang-release",
+            "configurePreset": "windows-clang-release"
+        },
+        {
+            "name": "windows-clang-install-docs",
+            "configurePreset": "windows-clang-release",
+            "targets": ["install", "doxygen-docs"]
+        },
+        {
+            "name": "windows-clang-debug",
+            "configurePreset": "windows-clang-debug"
+        },
+        {
+            "name": "clang-release",
+            "configurePreset": "clang-release"
+        },
+        {
+            "name": "clang-install-docs",
+            "configurePreset": "clang-release",
+            "targets": ["install", "doxygen-docs"]
+        },
+        {
+            "name": "clang-debug",
+            "configurePreset": "clang-debug"
+        },
+        {
+            "name": "gcc-release",
+            "configurePreset": "gcc-release"
+        },
+        {
+            "name": "gcc-install-docs",
+            "configurePreset": "gcc-release",
+            "targets": ["install", "doxygen-docs"]
+        },
+        {
+            "name": "gcc-debug",
+            "configurePreset": "gcc-debug"
+        }
     ],
     "packagePresets": [
-       {
-          "name": "clang-release",
-          "configurePreset": "clang-release",
-          "generators": [
-             "TGZ"
-          ]
-       },
-       {
-          "name": "gcc-release",
-          "configurePreset": "gcc-release",
-          "generators": [
-             "TGZ"
-          ]
-       }
+        {
+            "name": "windows-msvc-release",
+            "configurePreset": "windows-msvc-release",
+            "generators": [ "TGZ" ]
+        },
+        {
+            "name": "windows-clang-release",
+            "configurePreset": "windows-clang-release",
+            "generators": [ "TGZ" ]
+        },
+        {
+            "name": "clang-release",
+            "configurePreset": "clang-release",
+            "generators": [ "TGZ" ]
+        },
+        {
+            "name": "gcc-release",
+            "configurePreset": "gcc-release",
+            "generators": [ "TGZ" ]
+        }
     ],
     "workflowPresets": [
-      {
-        "name": "clang-debug",
-        "steps": [
-           {
-              "type": "configure",
-              "name": "clang-debug"
-           },
-           {
-              "type": "build",
-              "name": "clang-debug"
-           },
-           {
-              "type": "test",
-              "name": "clang-debug"
-           }
-        ]
-     },
-     {
-        "name" : "clang-release",
-        "steps" : [
-           {
-              "name" : "clang-release",
-              "type" : "configure"
-           },
-           {
-              "name" : "clang-release",
-              "type" : "build"
-           },
-           {
-              "name" : "clang-release",
-              "type" : "package"
-           }
-        ]
-     },
-     {
-        "name": "gcc-debug",
-        "steps": [
-           {
-              "type": "configure",
-              "name": "gcc-debug"
-           },
-           {
-              "type": "build",
-              "name": "gcc-debug"
-           },
-           {
-              "type": "test",
-              "name": "gcc-debug"
-           }
-        ]
-     },
-     {
-        "name" : "gcc-release",
-        "steps" : [
-           {
-              "name" : "gcc-release",
-              "type" : "configure"
-           },
-           {
-              "name" : "gcc-release",
-              "type" : "build"
-           },
-           {
-              "name" : "gcc-release",
-              "type" : "package"
-           }
-        ]
-     }
-  ]
+        {
+            "name": "windows-msvc-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "windows-msvc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "windows-msvc-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "windows-msvc-debug"
+                }
+            ]
+        },
+        {
+            "name" : "windows-msvc-release",
+            "steps" : [
+                {
+                    "name" : "windows-msvc-release",
+                    "type" : "configure"
+                },
+                {
+                    "name" : "windows-msvc-release",
+                    "type" : "build"
+                },
+                {
+                    "name" : "windows-msvc-install-docs",
+                    "type" : "build"
+                },
+                {
+                    "name" : "windows-msvc-release",
+                    "type" : "package"
+                }
+            ]
+        },
+        {
+            "name": "windows-clang-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "windows-clang-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "windows-clang-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "windows-clang-debug"
+                }
+            ]
+        },
+        {
+            "name" : "windows-clang-release",
+            "steps" : [
+                {
+                    "name" : "windows-clang-release",
+                    "type" : "configure"
+                },
+                {
+                    "name" : "windows-clang-release",
+                    "type" : "build"
+                },
+                {
+                    "name" : "windows-clang-install-docs",
+                    "type" : "build"
+                },
+                {
+                    "name" : "windows-clang-release",
+                    "type" : "package"
+                }
+            ]
+        },
+        {
+            "name": "clang-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "clang-debug"
+                }
+            ]
+        },
+        {
+            "name" : "clang-release",
+            "steps" : [
+                {
+                    "name" : "clang-release",
+                    "type" : "configure"
+                },
+                {
+                    "name" : "clang-release",
+                    "type" : "build"
+                },
+                {
+                    "name" : "clang-install-docs",
+                    "type" : "build"
+                },
+                {
+                    "name" : "clang-release",
+                    "type" : "package"
+                }
+            ]
+        },
+        {
+            "name": "gcc-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "gcc-debug"
+                }
+            ]
+        },
+        {
+            "name" : "gcc-release",
+            "steps" : [
+                {
+                    "name" : "gcc-release",
+                    "type" : "configure"
+                },
+                {
+                    "name" : "gcc-release",
+                    "type" : "build"
+                },
+                {
+                    "name" : "gcc-install-docs",
+                    "type" : "build"
+                },
+                {
+                    "name" : "gcc-release",
+                    "type" : "package"
+                }
+            ]
+        }
+    ]
 }
