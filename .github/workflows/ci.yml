@@ -130,7 +130,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
