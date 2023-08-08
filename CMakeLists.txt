@@ -11,7 +11,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.30.0")
+set(PROJECT_OPTIONS_VERSION "v0.31.0")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -32,78 +32,72 @@ run_vcpkg()
 # Set the project name and language
 project(
   cpp_vcpkg_project
-  VERSION 1.0.1
+  VERSION 1.1.0
   DESCRIPTION ""
   HOMEPAGE_URL "https://github.com/aminya/cpp_vcpkg_project"
   LANGUAGES CXX C)
 
-# enable sanitizers and clang-tidy if running the tests
-set(ENABLE_CLANG_TIDY OFF)
-set(ENABLE_CPPCHECK OFF)
-set(ENABLE_SANITIZER_ADDRESS OFF)
-set(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR OFF)
-set(ENABLE_COVERAGE OFF)
-
 if(FEATURE_TESTS)
+  # enable sanitizers and analyzers if running the tests
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
   set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
+  set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
+
+  check_sanitizers_support(
+    ENABLE_SANITIZER_ADDRESS
+    ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
+    ENABLE_SANITIZER_LEAK
+    ENABLE_SANITIZER_THREAD
+    ENABLE_SANITIZER_MEMORY)
+
+  # generate a main function for the test executable
   enable_testing()
-
-  if(NOT
-     "${CMAKE_SYSTEM_NAME}"
-     STREQUAL
-     "Windows")
-    set(ENABLE_SANITIZER_ADDRESS "ENABLE_SANITIZER_ADDRESS")
-    set(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR "ENABLE_SANITIZER_UNDEFINED_BEHAVIOR")
-  else()
-    # or it is MSVC and has run vcvarsall
-    string(FIND "$ENV{PATH}" "$ENV{VSINSTALLDIR}" index_of_vs_install_dir)
-    if(MSVC AND "${index_of_vs_install_dir}" STREQUAL "-1")
-      set(ENABLE_SANITIZER_ADDRESS "ENABLE_SANITIZER_ADDRESS")
-    endif()
-  endif()
-
   add_library(catch2_test_common INTERFACE)
   target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
   target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2)
-  # generate a main function for the test executable
   target_compile_definitions(catch2_test_common INTERFACE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
   include(Catch)
 endif()
 
 if(FEATURE_DOCS)
   set(ENABLE_DOXYGEN "ENABLE_DOXYGEN")
-else()
-  set(ENABLE_DOXYGEN OFF)
 endif()
 
 # Initialize project_options variable related to this project
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
-  # a unique prefix to be added before the project_options and project_warnings name
   PREFIX
   "my"
   ENABLE_CACHE
   ${ENABLE_CPPCHECK}
   ${ENABLE_CLANG_TIDY}
+  ${ENABLE_VS_ANALYSIS}
+  # ENABLE_CONAN
   # ENABLE_INTERPROCEDURAL_OPTIMIZATION
   # ENABLE_NATIVE_OPTIMIZATION
   ${ENABLE_DOXYGEN}
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
-  # ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
-  # ENABLE_SANITIZER_LEAK
-  # ENABLE_SANITIZER_THREAD
-  # ENABLE_SANITIZER_MEMORY
+  ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
+  # ${ENABLE_SANITIZER_THREAD}
+  # ${ENABLE_SANITIZER_MEMORY}
+  # ENABLE_CONTROL_FLOW_PROTECTION
+  # ENABLE_STACK_PROTECTION
+  # ENABLE_OVERFLOW_PROTECTION
+  # ENABLE_ELF_PROTECTION
+  # ENABLE_RUNTIME_SYMBOLS_RESOLUTION
+  # ENABLE_COMPILE_COMMANDS_SYMLINK
   # ENABLE_PCH
   # PCH_HEADERS
   # WARNINGS_AS_ERRORS
   # ENABLE_INCLUDE_WHAT_YOU_USE
-  # ENABLE_USER_LINKER
+  # ENABLE_GCC_ANALYZER
   # ENABLE_BUILD_WITH_TIME_TRACE
   # ENABLE_UNITY
+  # LINKER "lld"
+  # CONAN_PROFILE ${profile_path}
 )
 
 add_subdirectory(./my_exe)
