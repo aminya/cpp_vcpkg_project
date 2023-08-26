@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.21...3.27)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
+# https://cmake.org/cmake/help/latest/policy/CMP0097.html#policy:CMP0097
+cmake_policy(SET CMP0097 NEW)
+
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
@@ -14,6 +17,7 @@ endif()
 set(PROJECT_OPTIONS_VERSION "v0.33.1")
 FetchContent_Declare(
   _project_options
+  GIT_SUBMODULES ""
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
 
 FetchContent_MakeAvailable(_project_options)
@@ -42,9 +46,12 @@ project(
   LANGUAGES CXX C)
 
 if(FEATURE_TESTS)
-  # enable sanitizers and analyzers if running the tests
-  set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  if($CACHE{ENABLE_CLANG_TIDY})
+    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
+  endif()
+  if($CACHE{ENABLE_CPPCHECK})
+    set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  endif()
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
 
@@ -75,6 +82,7 @@ project_options(
   PREFIX
   "my"
   ENABLE_CACHE
+  #TODO(CK): Only on CI! This is to slow while developing! use run-clang-tidy -p build/debug
   ${ENABLE_CPPCHECK}
   ${ENABLE_CLANG_TIDY}
   ${ENABLE_VS_ANALYSIS}
@@ -85,8 +93,8 @@ project_options(
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
-  # ${ENABLE_SANITIZER_THREAD}
-  # ${ENABLE_SANITIZER_MEMORY}
+  ${ENABLE_SANITIZER_THREAD}
+  ${ENABLE_SANITIZER_MEMORY}
   # ENABLE_CONTROL_FLOW_PROTECTION
   # ENABLE_STACK_PROTECTION
   # ENABLE_OVERFLOW_PROTECTION
@@ -99,9 +107,9 @@ project_options(
   # ENABLE_INCLUDE_WHAT_YOU_USE
   # ENABLE_GCC_ANALYZER
   # ENABLE_BUILD_WITH_TIME_TRACE
-  # ENABLE_UNITY
   # LINKER "lld"
   # CONAN_PROFILE ${profile_path}
+  #FIXME(CK): this does not work! ENABLE_UNITY
 )
 
 # to get CMAKE_INSTALL_INCLUDEDIR
