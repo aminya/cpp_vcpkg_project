@@ -1,50 +1,66 @@
-image: ubuntu:22.04
-
 stages:
   - test
+
+default:               # Add a default section to define the `image` keyword's default value
+  image: ubuntu:22.04
+
+.standard-rules:       # Make a hidden job to hold the common rules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    paths:
+      - "build/*/*.tar.gz"
 
 .setup_linux: &setup_linux |
   DEBIAN_FRONTEND=noninteractive
 
-  # set time-zone
-  TZ=Canada/Pacific
-  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+  # XXX WHY? set time-zone
+  # TZ=Canada/Pacific
+  # ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
   # for downloading
   apt-get update -qq
-  apt-get install -y --no-install-recommends curl gnupg ca-certificates
-
-  # keys used by apt
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
+  apt-get install -y --no-install-recommends curl gnupg ca-certificates python3-pip
 
 .setup_cpp: &setup_cpp |
   curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.33.0/setup-cpp-x64-linux"
   chmod +x setup-cpp-x64-linux
-  ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcovr true
+  ./setup-cpp-x64-linux --compiler $compiler --ccache true --vcpkg true # XXX --task true --gcovr true
   source ~/.cpprc
   pwd && mkdir -p build/coverage
+  python3 -m pip install cmake ninja gcovr
+  cmake --version
+  ninja --version
 
-.test: &test |
+# XXX not longer used! CK
+.task: &test |
   task coverage
   task coverage_release
   task install
 
 test_linux_llvm:
   stage: test
+  extends:
+    - .standard-rules  # Reuse the configuration in `.standard-rules` here
   variables:
     compiler: llvm
   script:
     - *setup_linux
     - *setup_cpp
-    - *test
+    - cmake --workflow --preset clang-debug
+    - gcovr .
+    - cmake --workflow --preset clang-release
 
 test_linux_gcc:
   stage: test
+  extends:
+    - .standard-rules  # Reuse the configuration in `.standard-rules` here
   variables:
     compiler: gcc
   script:
     - *setup_linux
     - *setup_cpp
-    - *test
+    - cmake --workflow --preset gcc-debug
+    - gcovr .
+    - cmake --workflow --preset gcc-release
