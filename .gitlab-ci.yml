@@ -24,6 +24,7 @@ stages:
   chmod +x setup-cpp-x64-linux
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcovr true
   source ~/.cpprc
+  pwd && mkdir -p build/coverage
 
 .test: &test |
   task coverage
