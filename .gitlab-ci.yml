@@ -1,8 +1,5 @@
 stages:
-  - test
-
-default:               # Add a default section to define the `image` keyword's default value
-  image: ubuntu:22.04
+  - build
 
 .standard-rules:       # Make a hidden job to hold the common rules
   rules:
@@ -45,31 +42,37 @@ default:               # Add a default section to define the `image` keyword's d
   task coverage_release
   task install
 
+.build:
+  script:
+    - *setup_cpp
+    - echo -e "\e[0Ksection_start:`date +%s`:my_build[collapsed=true]\r\e[0KHeader of the build collapsible section"
+    - cmake --workflow --preset ${CI_compiler}-debug
+    - gcovr .
+    - cmake --workflow --preset ${CI_compiler}-release
+    - echo -e "\e[0Ksection_end:`date +%s`:my_build\r\e[0K"
+
+default:               # Add a default section to define the `image` keyword's default value
+  image: ubuntu:22.04
+  before_script:
+    - *setup_linux
+
 test_linux_llvm:
-  stage: test
-  extends:
-    - .standard-rules  # Reuse the configuration in `.standard-rules` here
+  stage: build
   variables:
     compiler: llvm
-  script:
-    - *setup_linux
-    - *setup_cpp
-    - cmake --workflow --preset clang-debug
-    - gcovr .
-    - cmake --workflow --preset clang-release
-
-test_linux_gcc:
-  stage: test
+    CI_compiler: clang
   extends:
     - .standard-rules  # Reuse the configuration in `.standard-rules` here
+    - .build
+
+test_linux_gcc:
+  stage: build
   variables:
     compiler: gcc
-  script:
-    - *setup_linux
-    - *setup_cpp
-    - cmake --workflow --preset gcc-debug
-    - gcovr .
-    - cmake --workflow --preset gcc-release
+    CI_compiler: gcc
+  extends:
+    - .standard-rules  # Reuse the configuration in `.standard-rules` here
+    - .build
 
 # see https://docs.gitlab.com/ee/ci/jobs/#custom-collapsible-sections
 # job1:
