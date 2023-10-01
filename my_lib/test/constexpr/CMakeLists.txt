@@ -21,4 +21,4 @@ add_library_test(my_lib relaxed_constexpr_tests
 #   -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE
 # )
 #
-# add_library_test(my_lib constexpr_tests CONFIGS common relaxed_constexpr SOURCES constexpr_tests.cpp)
+# add_library_test(my_lib relaxed_constexpr_tests CONFIGS common relaxed_constexpr SOURCES constexpr_tests.cpp)
