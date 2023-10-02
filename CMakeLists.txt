@@ -53,7 +53,6 @@ if(FEATURE_TESTS)
 
   include(CTest)
   # common settings for library test
-  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/AddTest.cmake)
   if(${ENABLE_COVERAGE})
     set(COVERAGE_ARGS --reporter xml)
   endif()
