@@ -1,4 +1,5 @@
 #include <catch2/catch.hpp>
+
 #include <my_lib/lib.hpp>
 
 TEST_CASE("some_constexpr_fun") {

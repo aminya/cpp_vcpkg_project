@@ -45,6 +45,7 @@ words:
   - gcov
   - gcovr
   - gedit
+  - gtest
   - GTKMM
   - Hostx
   - hwrap
