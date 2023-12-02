@@ -26,8 +26,12 @@ include("./Features.cmake")
 if(ENABLE_CROSS_COMPILING)
   enable_cross_compiler()
 endif()
+
 # install vcpkg dependencies: - should be called before defining project()
-run_vcpkg()
+run_vcpkg(
+    VCPKG_URL "https://github.com/microsoft/vcpkg.git"
+    VCPKG_REV "16ee2ecb31788c336ace8bb14c21801efb6836e4"
+)
 
 # Set the project name and language
 project(
