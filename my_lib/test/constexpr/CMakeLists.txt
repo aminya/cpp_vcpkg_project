@@ -1,25 +1,24 @@
 # Add a file containing a set of constexpr tests
-add_executable(my_lib_constexpr_tests "./constexpr_tests.cpp")
-
-target_link_libraries(
-  my_lib_constexpr_tests
-  PRIVATE my_lib
-          my_project_warnings
-          my_project_options
-          catch2_test_common)
-
-catch_discover_tests(my_lib_constexpr_tests ${COVERAGE_ARGS})
+add_library_test(my_lib constexpr_tests CONFIGS common SOURCES constexpr_tests.cpp)
 
 # Disable the constexpr portion of the test, and build again this allows us to have an executable that we can debug when
 # things go wrong with the constexpr testing
-add_executable(my_lib_relaxed_constexpr_tests "./constexpr_tests.cpp")
+add_library_test(my_lib relaxed_constexpr_tests
+  CONFIGS
+  common
 
-target_link_libraries(
-  my_lib_relaxed_constexpr_tests
-  PRIVATE my_lib
-          my_project_warnings
-          my_project_options
-          catch2_test_common)
-target_compile_definitions(my_lib_relaxed_constexpr_tests PRIVATE -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE)
+  SOURCES
+  constexpr_tests.cpp
 
-catch_discover_tests(my_lib_relaxed_constexpr_tests ${COVERAGE_ARGS})
+  COMPILE_DEFINITIONS
+  -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE
+)
+
+# Or for reuse:
+#
+# add_test_config(relaxed_constexpr
+#   COMPILE_DEFINITIONS
+#   -DCATCH_CONFIG_RUNTIME_STATIC_REQUIRE
+# )
+#
+# add_library_test(my_lib relaxed_constexpr_tests CONFIGS common relaxed_constexpr SOURCES constexpr_tests.cpp)

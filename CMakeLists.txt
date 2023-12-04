@@ -55,13 +55,27 @@ if(FEATURE_TESTS)
     ENABLE_SANITIZER_THREAD
     ENABLE_SANITIZER_MEMORY)
 
-  # generate a main function for the test executable
-  enable_testing()
-  add_library(catch2_test_common INTERFACE)
-  target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
-  target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2)
-  target_compile_definitions(catch2_test_common INTERFACE CATCH_CONFIG_MAIN DO_NOT_USE_WMAIN)
-  include(Catch)
+  include(CTest)
+  # common settings for library test
+  if(${ENABLE_COVERAGE})
+    set(COVERAGE_ARGS --reporter xml)
+  endif()
+  add_test_config(common
+    DEPENDENCIES_CONFIG
+    Catch2
+
+    LIBRARIES
+    my_project_options
+    my_project_warnings
+    Catch2::Catch2
+
+    COMPILE_DEFINITIONS
+    CATCH_CONFIG_MAIN
+    DO_NOT_USE_WMAIN
+
+    EXECUTE_ARGS
+    ${COVERAGE_ARGS}
+  )
 endif()
 
 if(FEATURE_DOCS)
