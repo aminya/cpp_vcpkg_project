@@ -103,7 +103,7 @@ jobs:
 
       - name: Initialize CodeQL
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: "cpp"
 
@@ -130,7 +130,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
