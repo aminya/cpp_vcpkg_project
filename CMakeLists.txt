@@ -11,7 +11,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.33.0")
+set(PROJECT_OPTIONS_VERSION "v0.33.1")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -30,7 +30,7 @@ endif()
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg(
     VCPKG_URL "https://github.com/microsoft/vcpkg.git"
-    VCPKG_REV "16ee2ecb31788c336ace8bb14c21801efb6836e4"
+    VCPKG_REV "10e052511428d6b0c7fcc63a139e8024bb146032"
 )
 
 # Set the project name and language
