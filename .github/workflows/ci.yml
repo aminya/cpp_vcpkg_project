@@ -44,7 +44,7 @@ jobs:
         include:
           # Inject GCOV variable for gcc
           - compiler: gcc
-            GCOV: gcov
+            GCOV: gcov-13
           # Inject GCOV variable for llvm
           - compiler: llvm
             GCOV: "llvm-cov gcov"
@@ -53,7 +53,7 @@ jobs:
           - os: ubuntu-22.04
             compiler: gcc
             CMAKE_GENERATOR: "Ninja"
-            GCOV: gcov
+            GCOV: gcov-13
 
           - os: windows-2022
             compiler: msvc
