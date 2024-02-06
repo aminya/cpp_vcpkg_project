@@ -13,9 +13,9 @@ stages:
   echo -e "\e[0Ksection_start:`date +%s`:my_setup_linux[collapsed=true]\r\e[0KHeader of the setup linux collapsible section"
   DEBIAN_FRONTEND=noninteractive
 
-  # XXX WHY? set time-zone
-  # TZ=Canada/Pacific
-  # ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+  # set time-zone
+  TZ=Canada/Pacific
+  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
   # for downloading
   apt-get update -qq
@@ -24,8 +24,9 @@ stages:
 
 .setup_cpp: &setup_cpp |
   echo -e "\e[0Ksection_start:`date +%s`:my_setup_cpp[collapsed=true]\r\e[0KHeader of the setup cpp collapsible section"
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.33.0/setup-cpp-x64-linux"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.35.3/setup-cpp-x64-linux"
   chmod +x setup-cpp-x64-linux
+  # export PATH="$HOME/.local/bin:$PATH"
   ./setup-cpp-x64-linux --compiler $compiler --ccache true --vcpkg true --clangtidy true
   source ~/.cpprc
   pwd && mkdir -p build/coverage
@@ -35,6 +36,7 @@ stages:
   python3 -m pip install cmake ninja gcovr
   cmake --version
   ninja --version
+  which gcovr && gcovr --version
 
 # XXX not longer used! CK
 .task: &test |
@@ -52,7 +54,7 @@ stages:
     - echo -e "\e[0Ksection_end:`date +%s`:my_build\r\e[0K"
 
 default:               # Add a default section to define the `image` keyword's default value
-  image: ubuntu:22.04
+  image: ubuntu:latest
   before_script:
     - *setup_linux
 

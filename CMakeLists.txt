@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.27)
+cmake_minimum_required(VERSION 3.21...3.28)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
@@ -14,7 +14,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.33.1")
+set(PROJECT_OPTIONS_VERSION "v0.34.0")
 FetchContent_Declare(
   _project_options
   GIT_SUBMODULES ""
