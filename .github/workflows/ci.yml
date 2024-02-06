@@ -30,7 +30,7 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-11
+          - macos-13
           - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
@@ -51,9 +51,9 @@ jobs:
 
           # Only to test non-multiconfig builds
           - os: ubuntu-22.04
-            compiler: gcc-11
-            CMAKE_GENERATOR: "Unix Makefiles"
-            GCOV: gcov-11
+            compiler: gcc
+            CMAKE_GENERATOR: "Ninja"
+            GCOV: gcov
 
           - os: windows-2022
             compiler: msvc
@@ -95,10 +95,8 @@ jobs:
           ccache: true
           clangtidy: true
           task: true
-
           cppcheck: true
-
-          gcovr: "5.2"
+          gcovr: true
           opencppcoverage: true
 
       - name: Initialize CodeQL

@@ -5,7 +5,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.35.1 && \
+    npm install -g setup-cpp@v0.36.2 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
@@ -27,5 +27,9 @@ RUN apt-get update -qq && \
     nala clean --lists && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
+
+# Include project
+ADD . /workspaces/cpp_vcpkg_project
+WORKDIR /workspaces/cpp_vcpkg_project
 
 ENTRYPOINT ["/bin/bash"]
