@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.27)
+cmake_minimum_required(VERSION 3.21...3.28)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
@@ -85,8 +85,8 @@ project_options(
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
-  # ${ENABLE_SANITIZER_THREAD}
-  # ${ENABLE_SANITIZER_MEMORY}
+  ${ENABLE_SANITIZER_THREAD}
+  ${ENABLE_SANITIZER_MEMORY}
   # ENABLE_CONTROL_FLOW_PROTECTION
   # ENABLE_STACK_PROTECTION
   # ENABLE_OVERFLOW_PROTECTION
@@ -108,6 +108,17 @@ add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)
 add_subdirectory(./my_header_lib)
 
+if(FEATURE_FUZZ_TESTS)
+  add_subdirectory(fuzz_test)
+endif()
+
+# set the startup project for the "play" button in MSVC
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT my_exe)
+
+if(CMAKE_SKIP_INSTALL_RULES)
+  return()
+endif()
+
 # the variables set using CACHE STRING "" are passed to package_project
 
 # Package the project
@@ -118,13 +129,6 @@ package_project(
   my_header_lib
   my_project_options
   my_project_warnings)
-
-if(FEATURE_FUZZ_TESTS)
-  add_subdirectory(fuzz_test)
-endif()
-
-# set the startup project for the "play" button in MSVC
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT my_exe)
 
 # Experience shows that explicit package naming can help make it easier to sort
 # out potential ABI related issues before they start, while helping you

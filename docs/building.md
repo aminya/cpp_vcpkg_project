@@ -24,7 +24,7 @@ CMake will detect which compiler was used to build each of the Conan targets. If
 
 	- Temporarily (only for the current shell)
 
-		Run one of the followings in the terminal:
+		Run one of the following in the terminal:
 
 		- clang
 
@@ -51,7 +51,7 @@ CMake will detect which compiler was used to build each of the Conan targets. If
 
 	- Permanent:
 
-		Run one of the followings in PowerShell:
+		Run one of the following in PowerShell:
 
 		- Visual Studio generator and compiler (cl)
 
@@ -92,12 +92,12 @@ With Cmake directly:
 
     cmake -S . -B ./build
 
-Cmake will automatically create the `./build` folder if it does not exist, and it wil configure the project.
+Cmake will automatically create the `./build` folder if it does not exist, and it configures the project.
 
-Instead, if you have CMake version 3.21+, you can use one of the configuration presets that are listed in the CmakePresets.json file.
+Instead, if you have CMake version 3.25+, you can use one of the workflow presets that are listed in the CmakePresets.json file.
 
-    cmake . --preset <configure-preset>
-    cmake --build
+    cmake --workflow --list-presets
+    cmake --workflow --preset <preset>
 
 #### (2.b) Configuring via ccmake:
 

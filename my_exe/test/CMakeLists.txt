@@ -1,5 +1,5 @@
 # test dependencies
-include(CTest)
+# TODO(CK): Not needed! include(CTest)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # test the executable part
