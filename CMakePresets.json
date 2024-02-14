@@ -33,6 +33,7 @@
                 "strategy": "external"
             },
             "cacheVariables": {
+                "CMAKE_SYSTEM_PROCESSOR": "x64",
                 "ENABLE_CPPCHECK_DEFAULT": "FALSE",
                 "ENABLE_CLANG_TIDY_DEFAULT": "FALSE"
             }
