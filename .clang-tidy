@@ -5,6 +5,7 @@ Checks: "*,
         -android-*,
         -fuchsia-*,
         google-*,
+        -google-runtime-int,
         -llvm*,
         -modernize-use-trailing-return-type,
         -zircon-*,
@@ -13,6 +14,7 @@ Checks: "*,
         readability-avoid-const-params-in-decls,
         cppcoreguidelines-non-private-member-variables-in-classes,
         misc-non-private-member-variables-in-classes,
+        -misc-include-cleaner,
 "
 
 WarningsAsErrors: ''

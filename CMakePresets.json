@@ -5,7 +5,9 @@
         "minor": 25,
         "patch": 0
     },
-    "include": ["CMakeWorkflowPrestes.json"],
+    "include": [
+        "CMakeWorkflowPrestes.json"
+    ],
     "configurePresets": [
         {
             "name": "conf-common",
@@ -215,7 +217,10 @@
         {
             "name": "windows-msvc-install-docs",
             "configurePreset": "windows-msvc-release",
-            "targets": ["install", "doxygen-docs"]
+            "targets": [
+                "install",
+                "doxygen-docs"
+            ]
         },
         {
             "name": "windows-msvc-debug",
@@ -228,7 +233,10 @@
         {
             "name": "windows-clang-install-docs",
             "configurePreset": "windows-clang-release",
-            "targets": ["install", "doxygen-docs"]
+            "targets": [
+                "install",
+                "doxygen-docs"
+            ]
         },
         {
             "name": "windows-clang-debug",
@@ -241,7 +249,10 @@
         {
             "name": "clang-install-docs",
             "configurePreset": "clang-release",
-            "targets": ["install", "doxygen-docs"]
+            "targets": [
+                "install",
+                "doxygen-docs"
+            ]
         },
         {
             "name": "clang-debug",
@@ -254,7 +265,10 @@
         {
             "name": "gcc-install-docs",
             "configurePreset": "gcc-release",
-            "targets": ["install", "doxygen-docs"]
+            "targets": [
+                "install",
+                "doxygen-docs"
+            ]
         },
         {
             "name": "gcc-debug",
@@ -265,22 +279,30 @@
         {
             "name": "windows-msvc-release",
             "configurePreset": "windows-msvc-release",
-            "generators": [ "TGZ" ]
+            "generators": [
+                "TGZ"
+            ]
         },
         {
             "name": "windows-clang-release",
             "configurePreset": "windows-clang-release",
-            "generators": [ "TGZ" ]
+            "generators": [
+                "TGZ"
+            ]
         },
         {
             "name": "clang-release",
             "configurePreset": "clang-release",
-            "generators": [ "TGZ" ]
+            "generators": [
+                "TGZ"
+            ]
         },
         {
             "name": "gcc-release",
             "configurePreset": "gcc-release",
-            "generators": [ "TGZ" ]
+            "generators": [
+                "TGZ"
+            ]
         }
     ],
     "workflowPresets": [
@@ -302,23 +324,23 @@
             ]
         },
         {
-            "name" : "windows-msvc-release",
-            "steps" : [
+            "name": "windows-msvc-release",
+            "steps": [
                 {
-                    "name" : "windows-msvc-release",
-                    "type" : "configure"
+                    "name": "windows-msvc-release",
+                    "type": "configure"
                 },
                 {
-                    "name" : "windows-msvc-release",
-                    "type" : "build"
+                    "name": "windows-msvc-release",
+                    "type": "build"
                 },
                 {
-                    "name" : "windows-msvc-install-docs",
-                    "type" : "build"
+                    "name": "windows-msvc-install-docs",
+                    "type": "build"
                 },
                 {
-                    "name" : "windows-msvc-release",
-                    "type" : "package"
+                    "name": "windows-msvc-release",
+                    "type": "package"
                 }
             ]
         },
@@ -340,23 +362,23 @@
             ]
         },
         {
-            "name" : "windows-clang-release",
-            "steps" : [
+            "name": "windows-clang-release",
+            "steps": [
                 {
-                    "name" : "windows-clang-release",
-                    "type" : "configure"
+                    "name": "windows-clang-release",
+                    "type": "configure"
                 },
                 {
-                    "name" : "windows-clang-release",
-                    "type" : "build"
+                    "name": "windows-clang-release",
+                    "type": "build"
                 },
                 {
-                    "name" : "windows-clang-install-docs",
-                    "type" : "build"
+                    "name": "windows-clang-install-docs",
+                    "type": "build"
                 },
                 {
-                    "name" : "windows-clang-release",
-                    "type" : "package"
+                    "name": "windows-clang-release",
+                    "type": "package"
                 }
             ]
         },
@@ -378,23 +400,23 @@
             ]
         },
         {
-            "name" : "clang-release",
-            "steps" : [
+            "name": "clang-release",
+            "steps": [
                 {
-                    "name" : "clang-release",
-                    "type" : "configure"
+                    "name": "clang-release",
+                    "type": "configure"
                 },
                 {
-                    "name" : "clang-release",
-                    "type" : "build"
+                    "name": "clang-release",
+                    "type": "build"
                 },
                 {
-                    "name" : "clang-install-docs",
-                    "type" : "build"
+                    "name": "clang-install-docs",
+                    "type": "build"
                 },
                 {
-                    "name" : "clang-release",
-                    "type" : "package"
+                    "name": "clang-release",
+                    "type": "package"
                 }
             ]
         },
@@ -416,23 +438,23 @@
             ]
         },
         {
-            "name" : "gcc-release",
-            "steps" : [
+            "name": "gcc-release",
+            "steps": [
                 {
-                    "name" : "gcc-release",
-                    "type" : "configure"
+                    "name": "gcc-release",
+                    "type": "configure"
                 },
                 {
-                    "name" : "gcc-release",
-                    "type" : "build"
+                    "name": "gcc-release",
+                    "type": "build"
                 },
                 {
-                    "name" : "gcc-install-docs",
-                    "type" : "build"
+                    "name": "gcc-install-docs",
+                    "type": "build"
                 },
                 {
-                    "name" : "gcc-release",
-                    "type" : "package"
+                    "name": "gcc-release",
+                    "type": "package"
                 }
             ]
         }
