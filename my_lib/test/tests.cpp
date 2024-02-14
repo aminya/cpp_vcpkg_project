@@ -1,4 +1,5 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+
 #include <my_lib/lib.hpp>
 
 TEST_CASE("some_fun") {

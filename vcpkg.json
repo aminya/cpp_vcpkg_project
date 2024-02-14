@@ -1,12 +1,12 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "myproject",
   "version-string": "0.1.0",
-  "builtin-baseline": "a3df696929b28195b0d7a477ba6cd16dba48fa52",
+  "builtin-baseline": "10e052511428d6b0c7fcc63a139e8024bb146032",
   "dependencies": [
     {
       "name": "fmt",
-      "version>=": "9.1.0#1"
+      "version>=": "10.1.1"
     }
   ],
   "features": {
@@ -15,7 +15,7 @@
       "dependencies": [
         {
           "name": "catch2",
-          "version>=": "2.13.9#1"
+          "version>=": "3.4.0"
         }
       ]
     }

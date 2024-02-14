@@ -11,7 +11,7 @@ on:
 
 jobs:
   Test:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
     permissions:
       actions: read
@@ -65,10 +65,10 @@ jobs:
         #     compiler: gcc
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/vcpkg
@@ -98,12 +98,12 @@ jobs:
 
           cppcheck: true
 
-          gcovr: true
+          gcovr: "5.2"
           opencppcoverage: true
 
       - name: Initialize CodeQL
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: "cpp"
 
@@ -130,7 +130,7 @@ jobs:
 
       - name: Perform CodeQL Analysis
         if: ${{ contains(matrix.os, 'ubuntu') && contains(matrix.compiler, 'llvm') }}
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v3
 
       - name: Publish Tagged Release
         uses: softprops/action-gh-release@v1
@@ -140,7 +140,7 @@ jobs:
             build/*-*Release*-*.*
 
       - name: Publish to codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
