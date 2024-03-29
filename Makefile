@@ -4,10 +4,9 @@
 # - list all the task under PHONY
 # - If getting missing separator error, try replacing spaces with tabs.
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or remove the Ninja generator from the commands.
-.PHONY: build test test_release docs format clean
+.PHONY: build test test_release test_install docs format clean
 
-build:
-	make release
+build: release
 
 release:
 	cmake -S ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Release -DFEATURE_TESTS:BOOL=OFF
@@ -41,15 +40,15 @@ test_release:
 	(cd build/my_header_lib/test && ctest -C Release --output-on-failure)
 	(cd build/my_lib/test && ctest -C Release --output-on-failure)
 
-test_install:
-	cmake --install ./build --prefix ./build/test_install
+test_install: release
+	cmake --install ./build --prefix ./build/install
 
 coverage:
 ifeq ($(OS), Windows_NT)
 	OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- make test
 else
 	make test
-	gcovr -j 1 --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable gcov
+	gcovr -j 1 --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable gcov-13
 endif
 
 docs:

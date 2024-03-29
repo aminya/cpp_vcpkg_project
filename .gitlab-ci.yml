@@ -1,9 +1,16 @@
-image: ubuntu:22.04
-
 stages:
-  - test
+  - build
+
+.standard-rules:       # Make a hidden job to hold the common rules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    paths:
+      - "build/*/*.tar.gz"
 
 .setup_linux: &setup_linux |
+  echo -e "\e[0Ksection_start:`date +%s`:my_setup_linux[collapsed=true]\r\e[0KHeader of the setup linux collapsible section"
   DEBIAN_FRONTEND=noninteractive
 
   # set time-zone
@@ -12,38 +19,66 @@ stages:
 
   # for downloading
   apt-get update -qq
-  apt-get install -y --no-install-recommends curl gnupg ca-certificates
-
-  # keys used by apt
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
+  apt-get install -y --no-install-recommends curl gnupg ca-certificates python3-pip
+  echo -e "\e[0Ksection_end:`date +%s`:my_setup_linux\r\e[0K"
 
 .setup_cpp: &setup_cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.2/setup_cpp_linux"
-  chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcov true
+  echo -e "\e[0Ksection_start:`date +%s`:my_setup_cpp[collapsed=true]\r\e[0KHeader of the setup cpp collapsible section"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.35.3/setup-cpp-x64-linux"
+  chmod +x setup-cpp-x64-linux
+  # export PATH="$HOME/.local/bin:$PATH"
+  ./setup-cpp-x64-linux --compiler $compiler --ccache true --vcpkg true --clangtidy true
   source ~/.cpprc
+  pwd && mkdir -p build/coverage
+  echo -e "\e[0Ksection_end:`date +%s`:my_setup_cpp\r\e[0K"
+  clang-tidy --version
+  python3 --version
+  python3 -m pip install cmake ninja gcovr
+  cmake --version
+  ninja --version
+  which gcovr && gcovr --version
 
-.test: &test |
+# XXX not longer used! CK
+.task: &test |
   task coverage
   task coverage_release
   task install
 
+.build:
+  script:
+    - *setup_cpp
+    - echo -e "\e[0Ksection_start:`date +%s`:my_build[collapsed=true]\r\e[0KHeader of the build collapsible section"
+    - cmake --workflow --preset ${CI_compiler}-debug
+    - gcovr .
+    - cmake --workflow --preset ${CI_compiler}-release
+    - echo -e "\e[0Ksection_end:`date +%s`:my_build\r\e[0K"
+
+default:               # Add a default section to define the `image` keyword's default value
+  image: ubuntu:latest
+  before_script:
+    - *setup_linux
+
 test_linux_llvm:
-  stage: test
+  stage: build
   variables:
     compiler: llvm
-  script:
-    - *setup_linux
-    - *setup_cpp
-    - *test
+    CI_compiler: clang
+  extends:
+    - .standard-rules  # Reuse the configuration in `.standard-rules` here
+    - .build
 
 test_linux_gcc:
-  stage: test
+  stage: build
   variables:
     compiler: gcc
-  script:
-    - *setup_linux
-    - *setup_cpp
-    - *test
+    CI_compiler: gcc
+  extends:
+    - .standard-rules  # Reuse the configuration in `.standard-rules` here
+    - .build
+
+# see https://docs.gitlab.com/ee/ci/jobs/#custom-collapsible-sections
+# job1:
+#   script:
+#     - echo -e "\e[0Ksection_start:`date +%s`:my_first_section[collapsed=true]\r\e[0KHeader of the 1st collapsible section"
+#     - echo 'this line should be hidden automatically after loading the job log'
+#     - echo -e "\e[0Ksection_end:`date +%s`:my_first_section\r\e[0K"

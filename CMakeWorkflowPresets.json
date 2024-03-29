@@ -1,0 +1,198 @@
+{
+    "version": 7,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 27,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default-config",
+            "hidden": true,
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_HOST_SYSTEM_PROCESSOR": "$penv{PROCESSOR_ARCHITECTURE}"
+            },
+            "environment": { "VARIANT": "MSVC" }
+        },
+        {
+            "name": "compiler-config",
+            "hidden": false,
+            "inherits": "default-config",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "$penv{CC}",
+                "CMAKE_CXX_COMPILER": "$penv{CXX}",
+                "CMAKE_HOST_SYSTEM_PROCESSOR": "$penv{HOSTTYPE}"
+            }
+        },
+        {
+            "name": "clang-config",
+            "hidden": true,
+            "inherits": "default-config",
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            },
+            "environment": { "VARIANT": "Clang" }
+        },
+        {
+            "name": "ninja-multi-vcpkg",
+            "displayName": "Ninja Multi-Config",
+            "description": "Configure with vcpkg toolchain and generate Ninja Multi-Config project files for all variants",
+            "vendor": {
+                "ClausKlein.de/CMake/1.0": {
+                    "description": "FIXME: We need macro expansion here!",
+                    "inherits": "$penv{CC}-config"
+                }
+            },
+            "inherits": "compiler-config",
+            "generator": "Ninja Multi-Config",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": {
+                    "type": "FILEPATH",
+                    "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+                },
+                "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": {
+                    "type": "FILEPATH",
+                    "value": "${sourceDir}/toolchain/WindowsToolchain/Windows.$env{VARIANT}.toolchain.cmake"
+                }
+            }
+        },
+        {
+            "name": "common-config",
+            "description": "Settings for all toolchains",
+            "hidden": true,
+            "inherits": "ninja-multi-vcpkg",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/install/${presetName}",
+            "cacheVariables": {
+                "ENABLE_DOXYGEN": false,
+                "ENABLE_CPPCHECK": false,
+                "ENABLE_CLANG_TIDY": false
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "description": "Debug build type",
+            "inherits": "common-config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "FEATURE_TESTS": true
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Release build type",
+            "inherits": "common-config",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "FEATURE_DOCS": false
+            }
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "common-test",
+            "description": "Test CMake settings that apply to all configurations",
+            "hidden": true,
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Strict",
+            "description": "Enable output and stop on failure",
+            "inherits": "common-test",
+            "configuration": "Debug",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "displayName": "Strict",
+            "description": "Enable output and stop on failure",
+            "inherits": "common-test",
+            "configuration": "Release",
+            "configurePreset": "release"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "release",
+            "configurePreset": "release"
+        },
+        {
+            "name": "install",
+            "configurePreset": "release",
+            "targets": [ "install" ]
+        },
+        {
+            "name": "gen-docs",
+            "configurePreset": "release",
+            "targets": [ "doxygen-docs" ]
+        },
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "generators": [
+                "TGZ"
+            ]
+        }
+    ],
+    "workflowPresets": [
+        {
+            "description": "Developer workflow without installation",
+            "name": "debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "debug"
+                },
+                {
+                    "type": "build",
+                    "name": "debug"
+                },
+                {
+                    "type": "test",
+                    "name": "debug"
+                }
+            ]
+        },
+        {
+            "description": "Release workflow without test",
+            "name": "release",
+            "steps": [
+                {
+                    "name": "release",
+                    "type": "configure"
+                },
+                {
+                    "name": "release",
+                    "type": "build"
+                },
+                {
+                    "name": "release",
+                    "type": "package"
+                }
+            ]
+        }
+    ]
+}
