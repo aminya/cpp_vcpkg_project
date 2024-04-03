@@ -1,5 +1,4 @@
 # test dependencies
-# TODO(CK) Not needed! include(CTest)
 
 # test executable
 add_executable(my_lib_tests "./tests.cpp")
