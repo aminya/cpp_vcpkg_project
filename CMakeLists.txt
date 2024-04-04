@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.28)
+cmake_minimum_required(VERSION 3.21...3.29)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
@@ -14,7 +14,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.34.0")
+set(PROJECT_OPTIONS_VERSION "v0.35.1")
 FetchContent_Declare(
   _project_options
   GIT_SUBMODULES ""
@@ -46,6 +46,7 @@ project(
   LANGUAGES CXX C)
 
 if(FEATURE_TESTS)
+  # enable sanitizers and analyzers if running the tests
   if($ENV{CI})
     set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
     set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
@@ -91,8 +92,8 @@ project_options(
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
-  ${ENABLE_SANITIZER_THREAD}
-  ${ENABLE_SANITIZER_MEMORY}
+  # ${ENABLE_SANITIZER_THREAD}
+  # ${ENABLE_SANITIZER_MEMORY}
   # ENABLE_CONTROL_FLOW_PROTECTION
   # ENABLE_STACK_PROTECTION
   # ENABLE_OVERFLOW_PROTECTION
@@ -109,9 +110,6 @@ project_options(
   # CONAN_PROFILE ${profile_path}
   #FIXME(CK): this does not work! ENABLE_UNITY
 )
-
-# to get CMAKE_INSTALL_INCLUDEDIR
-include(GNUInstallDirs)
 
 add_subdirectory(./my_exe)
 add_subdirectory(./my_lib)
