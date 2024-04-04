@@ -2,7 +2,7 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 27,
+    "minor": 25,
     "patch": 0
   },
   "include": [
@@ -93,7 +93,7 @@
   ],
   "testPresets": [
     {
-      "name": "test-common",
+      "name": "windows-test-common",
       "description": "Test CMake settings that apply to all configurations",
       "hidden": true,
       "output": {
@@ -108,14 +108,14 @@
       "name": "windows-msvc-debug",
       "displayName": "Strict",
       "description": "Enable output and stop on failure",
-      "inherits": "test-common",
+      "inherits": "windows-test-common",
       "configurePreset": "windows-msvc-debug"
     },
     {
       "name": "windows-clang-debug",
       "displayName": "Strict",
       "description": "Enable output and stop on failure",
-      "inherits": "test-common",
+      "inherits": "windows-test-common",
       "configurePreset": "windows-clang-debug"
     }
   ],

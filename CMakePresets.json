@@ -1,11 +1,12 @@
 {
-  "version": 9,
+  "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 29,
+    "minor": 25,
     "patch": 0
   },
   "include": [
-    "CMake${hostSystemName}Presets.json"
+    "CMakeWindowsPresets.json",
+    "CMakeUnixPresets.json"
   ]
 }
