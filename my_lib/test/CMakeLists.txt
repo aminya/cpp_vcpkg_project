@@ -1,5 +1,4 @@
 # test dependencies
-include(CTest)
 
 # test executable
 add_executable(my_lib_tests "./tests.cpp")
