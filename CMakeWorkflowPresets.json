@@ -14,15 +14,15 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "installDir": "${sourceDir}/install/${presetName}",
       "cacheVariables": {
+        "CMAKE_UNITY_BUILD": true,
         "FEATURE_DOCS": true
       }
     },
     {
-      "name": "default",
+      "name": "Release",
+      "inherits": "conf-common",
       "displayName": "Default User Config",
       "description": "Default build using Ninja generator",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/default",
       "installDir": "${sourceDir}/install",
       "cacheVariables": {
         "CMAKE_PREFIX_PATH": {
@@ -32,7 +32,7 @@
         "CMAKE_CXX_STANDARD": "20",
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_SKIP_INSTALL_RULES": false,
-        "BUILD_SHARED_LIBS": false,
+        "BUILD_SHARED_LIBS": true,
         "FEATURE_TESTS": false,
         "FEATURE_DOCS": false,
         "WARNINGS_AS_ERRORS": false
@@ -45,34 +45,59 @@
     },
     {
       "name": "developer",
-      "inherits": "default",
+      "inherits": "Release",
       "displayName": "Ninja Multi-Config",
-      "description": "Default build using Ninja Multi-Config generator",
+      "description": "Debug build using Ninja Multi-Config generator",
       "generator": "Ninja Multi-Config",
-      "binaryDir": "${sourceDir}/build/developer",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_SKIP_INSTALL_RULES": true,
         "BUILD_SHARED_LIBS": true,
-        "FEATURE_FUZZ_TESTS": false,
+        "FEATURE_FUZZ_TESTS": true,
         "FEATURE_TESTS": true,
         "FEATURE_DOCS": false,
-        "WARNINGS_AS_ERRORS": "WARNINGS_AS_ERRORS"
+        "WARNINGS_AS_ERRORS": true
+      }
+    },
+    {
+      "name": "RelWithDebInfo",
+      "inherits": "developer",
+      "description": "RelWithDebInfo build using Ninja Multi-Config generator",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_SKIP_INSTALL_RULES": false,
+        "BUILD_SHARED_LIBS": true,
+        "FEATURE_FUZZ_TESTS": false,
+        "FEATURE_TESTS": false,
+        "FEATURE_DOCS": false,
+        "WARNINGS_AS_ERRORS": false
       }
     }
   ],
   "buildPresets": [
     {
-      "name": "default",
-      "configurePreset": "default"
+      "name": "Release",
+      "configurePreset": "Release"
     },
     {
       "name": "developer",
       "configurePreset": "developer"
     },
     {
-      "name": "install",
-      "configurePreset": "default",
+      "name": "RelWithDebInfo",
+      "configurePreset": "RelWithDebInfo"
+    },
+    {
+      "name": "installRelease",
+      "configurePreset": "Release",
+      "targets": [
+        "install"
+      ]
+    },
+    {
+      "name": "installRelWithDebInfo",
+      "configurePreset": "RelWithDebInfo",
+      "configuration": "RelWithDebInfo",
       "targets": [
         "install"
       ]
@@ -94,8 +119,15 @@
   ],
   "packagePresets": [
     {
-      "name": "default",
-      "configurePreset": "default",
+      "name": "Release",
+      "configurePreset": "Release",
+      "generators": [
+        "TGZ"
+      ]
+    },
+    {
+      "name": "RelWithDebInfo",
+      "configurePreset": "RelWithDebInfo",
       "generators": [
         "TGZ"
       ]
@@ -103,23 +135,23 @@
   ],
   "workflowPresets": [
     {
-      "name": "default",
+      "name": "Release",
       "steps": [
         {
           "type": "configure",
-          "name": "default"
+          "name": "Release"
         },
         {
           "type": "build",
-          "name": "default"
+          "name": "Release"
         },
         {
           "type": "build",
-          "name": "install"
+          "name": "installRelease"
         },
         {
           "type": "package",
-          "name": "default"
+          "name": "Release"
         }
       ]
     },
@@ -137,6 +169,27 @@
         {
           "type": "test",
           "name": "developer"
+        }
+      ]
+    },
+    {
+      "name": "RelWithDebInfo",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "RelWithDebInfo"
+        },
+        {
+          "type": "build",
+          "name": "RelWithDebInfo"
+        },
+        {
+          "type": "build",
+          "name": "installRelWithDebInfo"
+        },
+        {
+          "type": "package",
+          "name": "RelWithDebInfo"
         }
       ]
     }

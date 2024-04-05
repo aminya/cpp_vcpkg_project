@@ -1,8 +1,11 @@
-cmake_minimum_required(VERSION 3.21...3.28)
+cmake_minimum_required(VERSION 3.23...3.29)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
-# set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
+
+# This allows libraries from multiple build types to be put in the same directory without overwriting each other
+set(CMAKE_RELWITHDEBINFO_POSTFIX d)
 
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
@@ -97,7 +100,7 @@ project_options(
   # ENABLE_PCH
   # PCH_HEADERS
   # WARNINGS_AS_ERRORS
-  # ENABLE_INCLUDE_WHAT_YOU_USE
+  ENABLE_INCLUDE_WHAT_YOU_USE
   # ENABLE_GCC_ANALYZER
   # ENABLE_BUILD_WITH_TIME_TRACE
   # ENABLE_UNITY

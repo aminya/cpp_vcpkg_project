@@ -16,6 +16,6 @@ Checks: "*,
         misc-non-private-member-variables-in-classes,
         misc-include-cleaner,
 "
-WarningsAsErrors: ''
+WarningsAsErrors: '*'
 HeaderFilterRegex: ''
 FormatStyle:     none

@@ -3,13 +3,16 @@
 # Notes:
 # - list all the task under PHONY
 # - If getting missing separator error, try replacing spaces with tabs.
-# - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall) or remove the Ninja generator from the commands.
-.PHONY: build test test_release test_install coverage docs format clean
+# - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall)
+#   or remove the Ninja generator from the commands.
+.PHONY: all build test test_release test_install test_release_debug coverage docs format clean distclean
 
 build: release
 
+all: release test_release test_install test_release_debug
+
 release:
-	cmake --workflow --preset default
+	cmake --workflow --preset Release
 
 debug:
 	cmake -S ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=OFF
@@ -19,16 +22,13 @@ test:
 	cmake --workflow --preset developer
 
 test_release_debug:
-	cmake -S ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo -DFEATURE_TESTS:BOOL=ON
-	cmake --build ./build --config RelWithDebInfo
+	cmake --workflow --preset RelWithDebInfo
 
-	(cd build/my_exe/test && ctest -C RelWithDebInfo --output-on-failure)
-	(cd build/my_header_lib/test && ctest -C RelWithDebInfo --output-on-failure)
-	(cd build/my_lib/test && ctest -C RelWithDebInfo --output-on-failure)
+test_release:
+	cmake --workflow --preset gcc-release
 
-test_release: release
-
-test_install: release
+test_install:
+	cmake --workflow --preset clang-release
 
 coverage:
 ifeq ($(OS), Windows_NT)
@@ -39,8 +39,8 @@ else
 endif
 
 docs:
-	cmake -S ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
-	cmake --build ./build --target doxygen-docs --config Debug
+	cmake -S ./ -B ./build/docs -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
+	cmake --build ./build/docs --target doxygen-docs --config Debug
 
 format:
 ifeq ($(OS), Windows_NT)
@@ -54,4 +54,11 @@ ifeq ($(OS), Windows_NT)
 	pwsh -c 'function rmrf($$path) { if (test-path $$path) { rm -r -force $$path }}; rmrf ./build;'
 else
 	rm -rf ./build
+endif
+
+distclean: clean
+ifeq ($(OS), Windows_NT)
+	pwsh -c 'function rmrf($$path) { if (test-path $$path) { rm -r -force $$path }}; rmrf ./install;'
+else
+	rm -rf ./install
 endif
