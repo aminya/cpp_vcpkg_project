@@ -5,19 +5,27 @@
 # - If getting missing separator error, try replacing spaces with tabs.
 # - If using Visual Studio, either run the following commands inside the Visual Studio command prompt (vcvarsall)
 #   or remove the Ninja generator from the commands.
+# Standard stuff
+
+.SUFFIXES:
+
+MAKEFLAGS+= --no-builtin-rules
+MAKEFLAGS+= --warn-undefined-variables
+
+OS?=$(shell uname)
+export PROJECT_DIR?=$(shell basename $(CURDIR))
+export BUILD_DIR?=$(CURDIR)/build
+
 .PHONY: all build test test_release test_install test_release_debug coverage docs format clean distclean
 
 build: release
 
-all: release test_release test_install test_release_debug
+all: test_release test_install test_release_debug coverage doc
 
 release:
 	cmake --workflow --preset Release
 
-debug:
-	cmake -S ./ -B ./build -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_TESTS:BOOL=OFF
-	cmake --build ./build --config Debug
-
+debug: test
 test:
 	cmake --workflow --preset developer
 
@@ -35,12 +43,11 @@ ifeq ($(OS), Windows_NT)
 	OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- $(MAKE) test
 else
 	$(MAKE) test
-	gcovr -j 1 --delete --root ./ --print-summary --xml-pretty --xml coverage.xml ./build --gcov-executable gcov
+	gcovr -j 1 --delete --root $(CURDIR) --print-summary --xml-pretty --xml coverage.xml $(BUILD_DIR)/developer --gcov-executable gcov
 endif
 
 docs:
-	cmake -S ./ -B ./build/docs -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE:STRING=Debug -DFEATURE_DOCS:BOOL=ON -DFEATURE_TESTS:BOOL=OFF
-	cmake --build ./build/docs --target doxygen-docs --config Debug
+	cmake --build $(BUILD_DIR)/developer --target doxygen-docs --config Coverage
 
 format:
 ifeq ($(OS), Windows_NT)
@@ -51,9 +58,9 @@ endif
 
 clean:
 ifeq ($(OS), Windows_NT)
-	pwsh -c 'function rmrf($$path) { if (test-path $$path) { rm -r -force $$path }}; rmrf ./build;'
+	pwsh -c 'function rmrf($$path) { if (test-path $$path) { rm -r -force $$path }}; rmrf $(BUILD_DIR);'
 else
-	rm -rf ./build
+	rm -rf $(BUILD_DIR)
 endif
 
 distclean: clean
@@ -62,3 +69,8 @@ ifeq ($(OS), Windows_NT)
 else
 	rm -rf ./install
 endif
+
+# Anything we don't know how to build will use this rule.
+# The command is a do-nothing command.
+#
+% :: ;
