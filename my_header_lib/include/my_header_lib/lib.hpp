@@ -2,11 +2,11 @@
 
 #include <fmt/core.h>
 
-inline int some_fun() {
+[[nodiscard]] inline int some_fun() {
   fmt::print("Hello {} !", "world");
   return 0;
 }
 
-constexpr int some_constexpr_fun() {
+[[nodiscard]] constexpr int some_constexpr_fun() {
   return 0;
 }

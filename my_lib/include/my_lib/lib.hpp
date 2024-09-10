@@ -1,7 +1,7 @@
 #pragma once
 
-int some_fun();
+[[nodiscard]] int some_fun();
 
-constexpr int some_constexpr_fun() {
+[[nodiscard]] constexpr int some_constexpr_fun() {
   return 0;
 }

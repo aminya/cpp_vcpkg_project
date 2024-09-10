@@ -1,7 +1,8 @@
-#include <fmt/format.h>
+#include <fmt/core.h> // for print, format_string
 
-#include <iterator>
-#include <utility>
+#include <cstddef>  // for size_t
+#include <cstdint>  // for uint8_t
+#include <iterator> // for next
 
 [[nodiscard]] auto sum_values(const uint8_t *Data, size_t Size) {
   constexpr auto scale = 1000;
