@@ -58,6 +58,7 @@ if(FEATURE_TESTS)
 
   # generate a main function for the test executable
   enable_testing()
+  find_package(Catch2 REQUIRED)
   add_library(catch2_test_common INTERFACE)
   target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
   target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2 Catch2::Catch2WithMain)
