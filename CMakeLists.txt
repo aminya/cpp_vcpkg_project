@@ -11,7 +11,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.36.2")
+set(PROJECT_OPTIONS_VERSION "v0.36.3")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -43,9 +43,8 @@ project(
 
 if(FEATURE_TESTS)
   # enable sanitizers and analyzers if running the tests
-  # IMHO(CK) either:
   set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  # XXX or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  # or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
 
