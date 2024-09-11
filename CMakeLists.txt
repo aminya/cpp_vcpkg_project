@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.21...3.28)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
+# Set to `ON` if using C++20 modules
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
@@ -77,6 +80,7 @@ endif()
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
+  # defines my_project_options/my_project_warnings
   PREFIX
   "my"
   ENABLE_CACHE

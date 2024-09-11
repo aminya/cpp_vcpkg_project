@@ -63,10 +63,10 @@ jobs:
           - os: macos-14
             compiler: appleclang
 
-        # To exclude a specific job from the matrix (e.g llvm on MacOS), you can use this syntax.
-        exclude:
-          - os: macos-14
-            compiler: llvm
+        # To exclude a specific job from the matrix (e.g llvm on macos-14), you can use this syntax.
+        # exclude:
+        #   - os: macos-14
+        #     compiler: llvm
 
     steps:
       - uses: actions/checkout@v4
