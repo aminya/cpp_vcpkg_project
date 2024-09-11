@@ -60,10 +60,13 @@ jobs:
             compiler: msvc
             CMAKE_GENERATOR: "Visual Studio 17 2022"
 
-        # To exclude a specific job from the matrix (e.g gcc on Windows), you can use this syntax.
-        # exclude:
-        #   - os: windows-2022
-        #     compiler: gcc
+          - os: macos-14
+            compiler: appleclang
+
+        # To exclude a specific job from the matrix (e.g llvm on MacOS), you can use this syntax.
+        exclude:
+          - os: macos-14
+            compiler: llvm
 
     steps:
       - uses: actions/checkout@v4
