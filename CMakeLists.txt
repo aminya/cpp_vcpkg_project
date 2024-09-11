@@ -44,8 +44,18 @@ project(
 
 if(FEATURE_TESTS)
   # enable sanitizers and analyzers if running the tests
-  set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  # or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  if(NOT
+     CMAKE_CXX_COMPILER_ID
+     STREQUAL
+     "GNU"
+     AND NOT
+         CMAKE_C_COMPILER_ID
+         STREQUAL
+         "GNU")
+    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
+  endif()
+
+  set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
 
@@ -80,8 +90,6 @@ project_options(
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
-  CLANG_TIDY_EXTRA_ARGUMENTS
-  "-extra-arg=-Wno-unknown-warning-option;-extra-arg=-Wno-error=unused-command-line-argument;-extra-arg=-Wno-unused-command-line-argument;-extra-arg=-Qunused-arguments"
   # ${ENABLE_SANITIZER_THREAD}
   # ${ENABLE_SANITIZER_MEMORY}
   # ENABLE_CONTROL_FLOW_PROTECTION
