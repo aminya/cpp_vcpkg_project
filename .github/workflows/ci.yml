@@ -102,7 +102,7 @@ jobs:
 
           cppcheck: true
 
-          gcovr: "5.2"
+          gcovr: 7.2
           opencppcoverage: true
 
       - name: Initialize CodeQL
