@@ -11,7 +11,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.36.3")
+set(PROJECT_OPTIONS_VERSION "v0.36.4")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -29,9 +29,10 @@ endif()
 
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg(
-    VCPKG_URL "https://github.com/microsoft/vcpkg.git"
-    VCPKG_REV "10e052511428d6b0c7fcc63a139e8024bb146032"
-)
+  VCPKG_URL
+  "https://github.com/microsoft/vcpkg.git"
+  VCPKG_REV
+  "10e052511428d6b0c7fcc63a139e8024bb146032")
 
 # Set the project name and language
 project(
@@ -47,13 +48,6 @@ if(FEATURE_TESTS)
   # or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
-
-  check_sanitizers_support(
-    ENABLE_SANITIZER_ADDRESS
-    ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
-    ENABLE_SANITIZER_LEAK
-    ENABLE_SANITIZER_THREAD
-    ENABLE_SANITIZER_MEMORY)
 
   # generate a main function for the test executable
   enable_testing()
