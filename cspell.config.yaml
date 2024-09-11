@@ -66,6 +66,7 @@ words:
   - PTRACE
   - pwsh
   - pylance
+  - Qunused
   - refreshenv
   - rmrf
   - SFML

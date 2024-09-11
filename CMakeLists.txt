@@ -80,6 +80,8 @@ project_options(
   ${ENABLE_COVERAGE}
   ${ENABLE_SANITIZER_ADDRESS}
   ${ENABLE_SANITIZER_UNDEFINED_BEHAVIOR}
+  CLANG_TIDY_EXTRA_ARGUMENTS
+  "-extra-arg=-Wno-unknown-warning-option;-extra-arg=-Wno-error=unused-command-line-argument;-extra-arg=-Wno-unused-command-line-argument;-extra-arg=-Qunused-arguments"
   # ${ENABLE_SANITIZER_THREAD}
   # ${ENABLE_SANITIZER_MEMORY}
   # ENABLE_CONTROL_FLOW_PROTECTION
