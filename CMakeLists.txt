@@ -32,7 +32,7 @@ run_vcpkg(
   VCPKG_URL
   "https://github.com/microsoft/vcpkg.git"
   VCPKG_REV
-  "10e052511428d6b0c7fcc63a139e8024bb146032")
+  "ee2d2a100103e0f3613c60655dcf15be7d5157b8")
 
 # Set the project name and language
 project(

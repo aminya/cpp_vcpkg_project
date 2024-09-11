@@ -1,4 +1,4 @@
-#include <fmt/core.h>
+#include <fmt/base.h>
 
 int some_fun() {
   fmt::print("Hello {} !", "world");
