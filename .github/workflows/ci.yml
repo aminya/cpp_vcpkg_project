@@ -30,7 +30,8 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-11
+          - macos-13
+          - macos-14
           - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
@@ -59,10 +60,13 @@ jobs:
             compiler: msvc
             CMAKE_GENERATOR: "Visual Studio 17 2022"
 
-        # To exclude a specific job from the matrix (e.g gcc on Windows), you can use this syntax.
+          - os: macos-14
+            compiler: appleclang
+
+        # To exclude a specific job from the matrix (e.g llvm on macos-14), you can use this syntax.
         # exclude:
-        #   - os: windows-2022
-        #     compiler: gcc
+          - os: macos-14
+            compiler: llvm
 
     steps:
       - uses: actions/checkout@v4
@@ -89,7 +93,7 @@ jobs:
           compiler: ${{ matrix.compiler }}
           vcvarsall: ${{ contains(matrix.os, 'windows' )}}
 
-          cmake: true
+          cmake: "3.28.4"
           ninja: true
           vcpkg: true
           ccache: true
@@ -98,7 +102,7 @@ jobs:
 
           cppcheck: true
 
-          gcovr: "5.2"
+          gcovr: 7.2
           opencppcoverage: true
 
       - name: Initialize CodeQL

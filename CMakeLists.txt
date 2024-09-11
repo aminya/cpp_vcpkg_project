@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.21...3.28)
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
 
+# Set to `ON` if using C++20 modules
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
@@ -11,7 +14,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.33.1")
+set(PROJECT_OPTIONS_VERSION "v0.36.4")
 FetchContent_Declare(
   _project_options
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -29,9 +32,10 @@ endif()
 
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg(
-    VCPKG_URL "https://github.com/microsoft/vcpkg.git"
-    VCPKG_REV "10e052511428d6b0c7fcc63a139e8024bb146032"
-)
+  VCPKG_URL
+  "https://github.com/microsoft/vcpkg.git"
+  VCPKG_REV
+  "ee2d2a100103e0f3613c60655dcf15be7d5157b8")
 
 # Set the project name and language
 project(
@@ -43,21 +47,24 @@ project(
 
 if(FEATURE_TESTS)
   # enable sanitizers and analyzers if running the tests
-  # IMHO(CK) either:
-  set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-  # XXX or: set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  if(NOT
+     CMAKE_CXX_COMPILER_ID
+     STREQUAL
+     "GNU"
+     AND NOT
+         CMAKE_C_COMPILER_ID
+         STREQUAL
+         "GNU")
+    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
+  endif()
+
+  set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
 
-  check_sanitizers_support(
-    ENABLE_SANITIZER_ADDRESS
-    ENABLE_SANITIZER_UNDEFINED_BEHAVIOR
-    ENABLE_SANITIZER_LEAK
-    ENABLE_SANITIZER_THREAD
-    ENABLE_SANITIZER_MEMORY)
-
   # generate a main function for the test executable
   enable_testing()
+  find_package(Catch2 REQUIRED)
   add_library(catch2_test_common INTERFACE)
   target_find_dependencies(catch2_test_common INTERFACE_CONFIG Catch2)
   target_link_libraries(catch2_test_common INTERFACE Catch2::Catch2 Catch2::Catch2WithMain)
@@ -73,6 +80,7 @@ endif()
 # This overwrites `project_options` and sets `project_warnings`
 # uncomment to enable the options. Some of them accept one or more inputs:
 project_options(
+  # defines my_project_options/my_project_warnings
   PREFIX
   "my"
   ENABLE_CACHE

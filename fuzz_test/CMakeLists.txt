@@ -3,6 +3,8 @@
 message("Building Fuzz Tests, using fuzzing sanitizer https://www.llvm.org/docs/LibFuzzer.html")
 
 find_package(fmt)
+set_target_properties(fmt::fmt PROPERTIES INTERFACE_COMPILE_OPTIONS
+                                          $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>)
 
 add_executable(fuzz_tester fuzz_tester.cpp)
 target_link_libraries(
