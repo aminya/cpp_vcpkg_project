@@ -6,7 +6,7 @@
     "patch": 0
   },
   "include": [
-    "CMakeWorkflowPresets.json"
+    "./CMakeWorkflowPresets.json"
   ],
   "configurePresets": [
     {
