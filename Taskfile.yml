@@ -31,7 +31,7 @@ tasks:
           task run_template
           mkdir -p ./build/coverage/
 
-          gcovr -j {{.nproc | default 1}} --delete --filter "my_exe/" --filter "my_lib/" --filter "my_header_lib/" --root ./ --print-summary --html-details ./build/coverage/index.html --xml-pretty --xml ./build/coverage.xml ./build
+          gcovr -j {{.nproc | default 1}} --delete --filter "my_exe/" --filter "my_lib/" --filter "my_header_lib/" --root ./ --print-summary --html-details ./build/coverage/index.html --xml-pretty --xml ./build/coverage.xml --gcov-ignore-errors=no_working_dir_found ./build
 
           echo "Open ./build/coverage/index.html in a browser for a visual coverage report"
         {{end}}
