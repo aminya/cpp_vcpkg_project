@@ -2,6 +2,7 @@ image: ubuntu:22.04
 
 stages:
   - test
+  - docs_deploy
 
 .setup_linux: &setup_linux |
   DEBIAN_FRONTEND=noninteractive
@@ -14,15 +15,10 @@ stages:
   apt-get update -qq
   apt-get install -y --no-install-recommends curl gnupg ca-certificates
 
-  # keys used by apt
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
-
 .setup_cpp: &setup_cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.2/setup_cpp_linux"
-  chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcov true
+  curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.41.1/setup-cpp-x64-linux"
+  chmod +x ./setup-cpp
+  ./setup-cpp --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true --task true --gcovr 7 --doxygen true
   source ~/.cpprc
 
 .test: &test |
@@ -38,6 +34,20 @@ test_linux_llvm:
     - *setup_linux
     - *setup_cpp
     - *test
+    - |
+      # Build the docs
+      task docs
+
+      # On the main branch
+      if [ "$CI_COMMIT_BRANCH" == "main" ]; then
+        # Prepare the docs
+        cp -r ./build/html/ ./public
+      fi
+  artifacts:
+    expire_in: 4 weeks
+    paths:
+      - package
+      - public
 
 test_linux_gcc:
   stage: test
@@ -47,3 +57,13 @@ test_linux_gcc:
     - *setup_linux
     - *setup_cpp
     - *test
+
+pages:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  image: alpine:latest
+  stage: docs_deploy
+  script: "echo 'Deploying website to https://$CI_PAGES_URL/'"
+  artifacts:
+    paths:
+      - public
