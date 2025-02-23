@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "myproject",
   "version-string": "0.1.0",
-  "builtin-baseline": "ee2d2a100103e0f3613c60655dcf15be7d5157b8",
+  "builtin-baseline": "5f8c424e267b7360d451df406eeefb3767985b17",
   "dependencies": [
     {
       "name": "fmt",
