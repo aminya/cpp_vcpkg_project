@@ -144,7 +144,7 @@ jobs:
             build/*-*Release*-*.*
 
       - name: Publish to codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           flags: ${{ runner.os }}
           name: ${{ runner.os }}-coverage
