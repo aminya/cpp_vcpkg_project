@@ -1,5 +1,5 @@
 # [Choice] bionic (18.04), focal (20.04)
-ARG VARIANT="jammy"
+ARG VARIANT="noble"
 FROM ubuntu:${VARIANT}
 
 # Restate the variant to use it later on in the llvm and cmake installations
