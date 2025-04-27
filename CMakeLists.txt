@@ -1,8 +1,11 @@
-cmake_minimum_required(VERSION 3.21...3.28)
+cmake_minimum_required(VERSION 3.23...4.0)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
 # set(CMAKE_CXX_STANDARD 20)
+
+# This allows libraries from multiple build types to be put in the same directory without overwriting each other
+set(CMAKE_RELWITHDEBINFO_POSTFIX d)
 
 # Set to `ON` if using C++20 modules
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)

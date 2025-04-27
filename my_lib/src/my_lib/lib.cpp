@@ -1,3 +1,5 @@
+#include "my_lib/lib.hpp"
+
 #include <fmt/base.h>
 
 int some_fun() {
