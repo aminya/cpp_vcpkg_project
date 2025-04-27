@@ -29,9 +29,9 @@ jobs:
       # and your own projects needs
       matrix:
         os:
-          - ubuntu-22.04
-          - macos-13
+          - ubuntu-24.04
           - macos-14
+          - macos-15
           - windows-2022
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
@@ -45,16 +45,16 @@ jobs:
         include:
           # Inject GCOV variable for gcc
           - compiler: gcc
-            GCOV: gcov
+            GCOV: gcov-13
           # Inject GCOV variable for llvm
           - compiler: llvm
             GCOV: "llvm-cov gcov"
 
           # Only to test non-multiconfig builds
-          - os: ubuntu-22.04
-            compiler: gcc-11
-            CMAKE_GENERATOR: "Unix Makefiles"
-            GCOV: gcov-11
+          - os: ubuntu-24.04
+            compiler: gcc
+            CMAKE_GENERATOR: "Ninja"
+            GCOV: gcov-13
 
           - os: windows-2022
             compiler: msvc
@@ -62,6 +62,7 @@ jobs:
 
           - os: macos-14
             compiler: appleclang
+            GCOV: gcov
 
         # To exclude a specific job from the matrix (e.g llvm on macos-14), you can use this syntax.
         exclude:
@@ -93,16 +94,14 @@ jobs:
           compiler: ${{ matrix.compiler }}
           vcvarsall: ${{ contains(matrix.os, 'windows' )}}
 
-          cmake: "3.28.4"
+          cmake: "3.28.6"
           ninja: true
           vcpkg: true
           ccache: true
           clangtidy: true
           task: true
-
           cppcheck: true
-
-          gcovr: 7.2
+          gcovr: 8.3
           opencppcoverage: true
 
       - name: Initialize CodeQL

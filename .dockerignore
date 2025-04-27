@@ -1,7 +1,11 @@
 # Build directories and binary files
 build/
+install/
 out/
 cmake-build-*/
+conan-cache/
+.cache/
+coverage.xml
 
 # User specific settings
 CMakeUserPresets.json
@@ -14,7 +18,9 @@ CMakeUserPresets.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.*.swp
 *.swp
+.*~
 *~
 _ReSharper*
 *.log
@@ -31,4 +37,9 @@ $RECYCLE.BIN/
 .TemporaryItems
 ehthumbs.db
 Thumbs.db
-Dockerfile
+compile_commands.json
+
+# docker related
+#Dockerfile
+toolchain/
+vcpkg/

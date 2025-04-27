@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21...3.28)
+cmake_minimum_required(VERSION 3.21...4.0)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
@@ -11,12 +11,16 @@ include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
   cmake_policy(SET CMP0135 NEW)
 endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31.0")
+  cmake_policy(SET CMP0177 NEW)
+endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
 set(PROJECT_OPTIONS_VERSION "v0.41.0")
 FetchContent_Declare(
   _project_options
+  GIT_SUBMODULES ""
   URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
 
 FetchContent_MakeAvailable(_project_options)
@@ -55,10 +59,13 @@ if(FEATURE_TESTS)
          CMAKE_C_COMPILER_ID
          STREQUAL
          "GNU")
-    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
+
   endif()
 
-  set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  if($ENV{CI})
+    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
+    set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
+  endif()
   set(ENABLE_COVERAGE "ENABLE_COVERAGE")
   set(ENABLE_VS_ANALYSIS "ENABLE_VS_ANALYSIS")
 
@@ -84,6 +91,7 @@ project_options(
   PREFIX
   "my"
   ENABLE_CACHE
+  #TODO(CK): Only on CI! This is to slow while developing! use run-clang-tidy -p build/debug
   ${ENABLE_CPPCHECK}
   ${ENABLE_CLANG_TIDY}
   ${ENABLE_VS_ANALYSIS}
@@ -108,9 +116,9 @@ project_options(
   # ENABLE_INCLUDE_WHAT_YOU_USE
   # ENABLE_GCC_ANALYZER
   # ENABLE_BUILD_WITH_TIME_TRACE
-  # ENABLE_UNITY
   # LINKER "lld"
   # CONAN_PROFILE ${profile_path}
+  #FIXME(CK): this does not work! ENABLE_UNITY
 )
 
 add_subdirectory(./my_exe)
