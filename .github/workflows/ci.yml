@@ -9,6 +9,10 @@ on:
       - develop
       - master
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Test:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
@@ -30,9 +34,9 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
-          - macos-13
           - macos-14
           - windows-2022
+          - macos-15-intel
         compiler:
           # you can specify the version after `-` like "llvm-13.0.0".
           - llvm
@@ -64,9 +68,9 @@ jobs:
             compiler: appleclang
 
         # To exclude a specific job from the matrix (e.g llvm on macos-14), you can use this syntax.
-        exclude:
-          - os: macos-14
-            compiler: llvm
+        # exclude:
+        #   - os: macos-14
+        #     compiler: llvm
 
     steps:
       - uses: actions/checkout@v4
