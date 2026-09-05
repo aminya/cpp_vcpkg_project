@@ -14,10 +14,10 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.42.0")
-FetchContent_Declare(
-  _project_options
-  URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
+# Pinned to the automatic sanitizer-runtime staging change until it is released.
+set(PROJECT_OPTIONS_VERSION "713476ff26ceb4847294aa4a4c5791b43b198d53")
+FetchContent_Declare(_project_options
+                     URL https://github.com/aminya/project_options/archive/${PROJECT_OPTIONS_VERSION}.zip)
 
 FetchContent_MakeAvailable(_project_options)
 include(${_project_options_SOURCE_DIR}/Index.cmake)
